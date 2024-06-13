@@ -74,7 +74,7 @@ def find_missing_rooms(grid, dungeon_size, x, y):
     pass
 
 
-def generate_dungeon(dungeon_size, room_count):
+def generate_main_path(dungeon_size, length):
     start_x = int(dungeon_size / 2)
     start_y = dungeon_size - 1
 
@@ -82,48 +82,59 @@ def generate_dungeon(dungeon_size, room_count):
     x = start_x
     y = start_y
 
-    grid[x, y] = Room(x, y)
-    room = grid[x, y]
+    room = grid[x, y] = Room(x, y)
     rooms = 1
 
+    # Checks if the room is within the bounds of the dungeon
     def is_within_bounds(room_x, room_y):
         return 0 <= room_x < dungeon_size and 0 <= room_y < dungeon_size
 
-    while rooms < room_count:
+    # Generate the main path of the dungeon
+    while rooms < length:
+        # Select a random direction to go to
         direction = random.choice(list(direction_dict.values()))
         next_x, next_y = x + direction[0], y + direction[1]
 
         if is_within_bounds(next_x, next_y):
+            # Create a new room if there is no room in the next position
             if not grid[next_x, next_y]:
-                grid[next_x, next_y] = Room(next_x, next_y)
-                next_room = grid[next_x, next_y]
+                next_room = grid[next_x, next_y] = Room(next_x, next_y)
                 rooms += 1
 
-                if rooms == room_count:
+                # Apply room modifiers
+                if rooms == length:
                     next_room.end = True
 
+                # Create a door between the rooms
                 connect_rooms(room, next_room, direction)
 
+                # Move to the next room
                 x, y = next_x, next_y
                 room = next_room
+
             else:
-                # Check if there are any free spaces left
-                free = False
+                # Find any possible connections to the next room
+                possible_connections = False
                 for direction in list(direction_dict.values()):
                     next_x, next_y = x + direction[0], y + direction[1]
-                    if 0 <= next_x < dungeon_size and 0 <= next_y < dungeon_size:
-                        if not grid[next_x, next_y]:
-                            free = True
-                            break
+                    if is_within_bounds(next_x, next_y) and not grid[next_x, next_y]:
+                        possible_connections = True
+                        break
 
-                # If there are no free spaces left, start over
-                if not free:
+                # If there are no possible connections, reset the grid
+                if not possible_connections:
                     grid = np.zeros((dungeon_size, dungeon_size), dtype=Room)
                     rooms = 1
                     x = start_x
                     y = start_y
                     grid[x, y] = Room(x, y)
                     room = grid[x, y]
+    return grid
+
+
+def generate_dungeon(dungeon_size, room_count):
+    # Generate the main path
+    grid = generate_main_path(dungeon_size, room_count)
 
     # Go through all the rooms and find missing neighbors
     to_visit = [(int(dungeon_size / 2), dungeon_size - 1)]
@@ -135,14 +146,13 @@ def generate_dungeon(dungeon_size, room_count):
         room = grid[x, y]
         for direction in list(direction_dict.values()):
             new_x, new_y = x + direction[0], y + direction[1]
-            if is_within_bounds(new_x, new_y):
+            if 0 <= new_x < dungeon_size and 0 <= new_y < dungeon_size:
                 if not grid[new_x, new_y]:
                     missing_neighbors.append((x, y, direction))
 
         # Select the direction vector that doesn't point to the previous room
         for direc in list(room.neighbors):
             if (previous_room is None or (x + direction_dict.get(direc)[0], y + direction_dict.get(direc)[1]) != previous_room.position):
-                print(f"Previous room: {previous_room}, current room: {room.position}, direction: {direc}")
                 direction_vector = direction_dict.get(direc)
                 break
 
