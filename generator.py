@@ -35,7 +35,7 @@ valid_sizes = [(1, 2), (2, 1), (1, 3), (3, 1), (2, 2)]
 
 def make_empty_room(size):
     dimensions = [a * b for a, b in zip(size, utils.ROOM_DIMENSIONS)]
-    room_layout = np.ones(dimensions)
+    room_layout = np.ones((dimensions[1], dimensions[0]))
     room_layout[1:-1, 1:-1] = 0
 
     return room_layout
@@ -78,13 +78,13 @@ class Room:
             door_cords = (0, 0)
 
             if neighbor.direction == Direction.UP:
-                door_cords = (0, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[1]))
+                door_cords = (0, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
             elif neighbor.direction == Direction.DOWN:
-                door_cords = (-1, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[1]))
+                door_cords = (-1, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
             elif neighbor.direction == Direction.LEFT:
-                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[0]), 0)
+                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[1]), 0)
             elif neighbor.direction == Direction.RIGHT:
-                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[0]), -1)
+                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[1]), -1)
 
             print(door_cords)
             self.layout[door_cords[0]][door_cords[1]] = 11
