@@ -2,10 +2,13 @@ import csv
 import os
 import pygame
 
-world_size = (21 * 64, 14 * 64)
+SCREEN_SIZE = (1000, 800)
+
+TILE_SIZE = 40
+WORLD_SIZE = (21 * TILE_SIZE, 14 * TILE_SIZE)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-basic_entity_size = (64, 64)
+basic_entity_size = (40, 40)
 font = './assets/Minecraft.ttf'
 map_center = []
 
