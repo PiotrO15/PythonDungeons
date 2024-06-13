@@ -72,34 +72,39 @@ class DungeonGenerator(QWidget):
 
         for y in range(self.dungeon_size):
             for x in range(self.dungeon_size):
-                rect = QRect(margin + x * cell_size + cell_size * 0.1, margin + y * cell_size + cell_size * 0.1, cell_size * 0.8, cell_size * 0.8)
+                room = self.dungeon[x, y]
                 if self.dungeon[x, y]:
-                    if self.dungeon[x, y].end:
-                        painter.fillRect(rect, Qt.red)
-                    else:
-                        painter.fillRect(rect, Qt.gray)
+                    rect = QRect(margin + x * cell_size + cell_size * 0.1,
+                                 margin + y * cell_size + cell_size * 0.1,
+                                 int(cell_size * room.size[0] - cell_size * 0.2),
+                                 int(cell_size * room.size[1] - cell_size * 0.2))
+                    if room.master is None:
+                        if self.dungeon[x, y].end:
+                            painter.fillRect(rect, Qt.red)
+                        else:
+                            painter.fillRect(rect, Qt.gray)
                     # Draw doors
                     if Direction.UP in self.dungeon[x, y].neighbors:
                         door_rect = QRect(margin + x * cell_size + (cell_size - door_size) // 2,
-                                          margin + (y + 1) * cell_size - cell_size * 0.1,
-                                          door_size, 10)
+                                          margin + y * cell_size - cell_size * 0.1 + 5,
+                                          door_size, 5)
                         painter.fillRect(door_rect, Qt.red)
                     if Direction.RIGHT in self.dungeon[x, y].neighbors:
                         door_rect = QRect(margin + (x + 1) * cell_size - cell_size * 0.1,
                                           margin + y * cell_size + (cell_size - door_size) // 2,
-                                          10, door_size)
+                                          5, door_size)
                         painter.fillRect(door_rect, Qt.blue)
                     if Direction.DOWN in self.dungeon[x, y].neighbors:
                         door_rect = QRect(margin + x * cell_size + (cell_size - door_size) // 2,
-                                          margin + y * cell_size - cell_size * 0.1,
-                                          door_size, 10)
+                                          margin + (y + 1) * cell_size - cell_size * 0.1,
+                                          door_size, 5)
                         painter.fillRect(door_rect, Qt.green)
                     if Direction.LEFT in self.dungeon[x, y].neighbors:
-                        door_rect = QRect(margin + x * cell_size - cell_size * 0.1,
+                        door_rect = QRect(margin + x * cell_size - cell_size * 0.1 + 5,
                                           margin + y * cell_size + (cell_size - door_size) // 2,
-                                          10, door_size)
+                                          5, door_size)
                         painter.fillRect(door_rect, Qt.yellow)
-                painter.drawRect(rect)
+                    painter.drawRect(rect)
 
         painter.end()
         return pixmap

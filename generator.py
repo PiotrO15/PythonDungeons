@@ -1,6 +1,9 @@
+from typing import Tuple
+
 import numpy as np
 import random
 from enum import Enum
+import typing
 
 
 # Enum for all the directions
@@ -13,17 +16,31 @@ class Direction(Enum):
 
 # Dictionary for all the directions
 direction_dict = {
-    Direction.UP: (0, 1),
+    Direction.UP: (0, -1),
     Direction.RIGHT: (1, 0),
-    Direction.DOWN: (0, -1),
+    Direction.DOWN: (0, 1),
     Direction.LEFT: (-1, 0)
 }
 
+valid_sizes = [(1, 2), (2, 1), (1, 3), (3, 1), (2, 2)]
+
 
 class Room:
-    def __init__(self):
+    position: Tuple[int, int]
+    size: tuple[int, int]
+    end: bool
+    neighbors: list[Direction]
+    master: typing.Optional[Tuple[int, int]]
+    merged_with: list
+
+    def __init__(self, x, y):
+        self.position = (x, y)
+        self.size = (1, 1)
+
         self.end = False
         self.neighbors = []
+        self.master = None
+        self.merged_with = []
 
 
 def find_missing_neighbors(grid, dungeon_size, x, y):
@@ -38,87 +55,150 @@ def find_missing_neighbors(grid, dungeon_size, x, y):
     return missing_neighbors
 
 
+def connect_rooms(first_room, second_room, direction):
+    if direction == (0, -1):  # Up
+        first_room.neighbors.append(Direction.UP)
+        second_room.neighbors.append(Direction.DOWN)
+    elif direction == (1, 0):  # Right
+        first_room.neighbors.append(Direction.RIGHT)
+        second_room.neighbors.append(Direction.LEFT)
+    elif direction == (0, 1):  # Down
+        first_room.neighbors.append(Direction.DOWN)
+        second_room.neighbors.append(Direction.UP)
+    elif direction == (-1, 0):  # Left
+        first_room.neighbors.append(Direction.LEFT)
+        second_room.neighbors.append(Direction.RIGHT)
+
+
 def find_missing_rooms(grid, dungeon_size, x, y):
     pass
 
 
 def generate_dungeon(dungeon_size, room_count):
-    grid = np.zeros((dungeon_size, dungeon_size), dtype=Room)
-    rooms = 0
-    x = int(dungeon_size / 2)
-    y = dungeon_size - 1
+    start_x = int(dungeon_size / 2)
+    start_y = dungeon_size - 1
+
+    grid = np.zeros((dungeon_size, dungeon_size), np.dtype(Room))
+    x = start_x
+    y = start_y
+
+    grid[x, y] = Room(x, y)
+    room = grid[x, y]
+    rooms = 1
+
+    def is_within_bounds(room_x, room_y):
+        return 0 <= room_x < dungeon_size and 0 <= room_y < dungeon_size
 
     while rooms < room_count:
-        if grid[x, y] == 0:
-            grid[x, y] = Room()
-            rooms += 1
-
-            if rooms == room_count:
-                grid[x, y].end = True
-
         direction = random.choice(list(direction_dict.values()))
-        new_x, new_y = x + direction[0], y + direction[1]
+        next_x, next_y = x + direction[0], y + direction[1]
 
-        if 0 <= new_x < dungeon_size and 0 <= new_y < dungeon_size and rooms < room_count:
-            if not grid[new_x, new_y]:
-                if direction == (0, 1):  # Up
-                    grid[x, y].neighbors.append(Direction.UP)
-                elif direction == (1, 0):  # Right
-                    grid[x, y].neighbors.append(Direction.RIGHT)
-                elif direction == (0, -1):  # Down
-                    grid[x, y].neighbors.append(Direction.DOWN)
-                elif direction == (-1, 0):  # Left
-                    grid[x, y].neighbors.append(Direction.LEFT)
+        if is_within_bounds(next_x, next_y):
+            if not grid[next_x, next_y]:
+                grid[next_x, next_y] = Room(next_x, next_y)
+                next_room = grid[next_x, next_y]
+                rooms += 1
 
-                x, y = new_x, new_y
+                if rooms == room_count:
+                    next_room.end = True
+
+                connect_rooms(room, next_room, direction)
+
+                x, y = next_x, next_y
+                room = next_room
             else:
+                # Check if there are any free spaces left
                 free = False
                 for direction in list(direction_dict.values()):
-                    new_x, new_y = x + direction[0], y + direction[1]
-                    if 0 <= new_x < dungeon_size and 0 <= new_y < dungeon_size:
-                        if not grid[new_x, new_y]:
+                    next_x, next_y = x + direction[0], y + direction[1]
+                    if 0 <= next_x < dungeon_size and 0 <= next_y < dungeon_size:
+                        if not grid[next_x, next_y]:
                             free = True
                             break
+
+                # If there are no free spaces left, start over
                 if not free:
                     grid = np.zeros((dungeon_size, dungeon_size), dtype=Room)
-                    rooms = 0
-                    x = int(dungeon_size / 2)
-                    y = dungeon_size - 1
+                    rooms = 1
+                    x = start_x
+                    y = start_y
+                    grid[x, y] = Room(x, y)
+                    room = grid[x, y]
 
     # Go through all the rooms and find missing neighbors
     to_visit = [(int(dungeon_size / 2), dungeon_size - 1)]
     missing_neighbors = []
+    previous_room = None
 
     while not grid[to_visit[0][0], to_visit[0][1]].end:
         x, y = to_visit.pop(0)
         room = grid[x, y]
         for direction in list(direction_dict.values()):
             new_x, new_y = x + direction[0], y + direction[1]
-            if 0 <= new_x < dungeon_size and 0 <= new_y < dungeon_size:
+            if is_within_bounds(new_x, new_y):
                 if not grid[new_x, new_y]:
                     missing_neighbors.append((x, y, direction))
 
-        direction_vector = direction_dict.get(room.neighbors[0])
+        # Select the direction vector that doesn't point to the previous room
+        for direc in list(room.neighbors):
+            if (previous_room is None or (x + direction_dict.get(direc)[0], y + direction_dict.get(direc)[1]) != previous_room.position):
+                print(f"Previous room: {previous_room}, current room: {room.position}, direction: {direc}")
+                direction_vector = direction_dict.get(direc)
+                break
+
         to_visit.append((x + direction_vector[0], y + direction_vector[1]))
+
+        previous_room = room
 
     while missing_neighbors:
         for x, y, direction in missing_neighbors:
             new_x, new_y = x + direction[0], y + direction[1]
             if not grid[new_x, new_y]:
-                grid[new_x, new_y] = Room()
-                grid[x, y].neighbors.append(direction)
-                if direction == (0, 1):  # Up
-                    grid[x, y].neighbors.append(Direction.UP)
-                elif direction == (1, 0):  # Right
-                    grid[x, y].neighbors.append(Direction.RIGHT)
-                elif direction == (0, -1):  # Down
-                    grid[x, y].neighbors.append(Direction.DOWN)
-                elif direction == (-1, 0):  # Left
-                    grid[x, y].neighbors.append(Direction.LEFT)
+                grid[new_x, new_y] = Room(new_x, new_y)
+                connect_rooms(grid[x, y], grid[new_x, new_y], direction)
 
                 missing_neighbors += find_missing_neighbors(grid, dungeon_size, new_x, new_y)
 
             missing_neighbors.remove((x, y, direction))
 
+    # Merge rooms
+    max_merges = 10
+    merges = 0
+
+    while merges < max_merges:
+        room = grid[random.randint(0, dungeon_size - 1), random.randint(0, dungeon_size - 1)]
+        while room.master is not None:
+            room = grid[room.master[0], room.master[1]]
+
+        if not room.end:
+            if len(room.neighbors) >= 1:
+                direction = random.choice(room.neighbors)
+                direction_vector = direction_dict.get(direction)
+                new_x, new_y = room.position[0] + direction_vector[0], room.position[1] + direction_vector[1]
+                if 0 <= new_x < dungeon_size and 0 <= new_y < dungeon_size:
+                    new_room = grid[new_x, new_y]
+                    while new_room.master is not None:
+                        new_room = grid[new_room.master[0], new_room.master[1]]
+                    if room.position[0] > new_x or room.position[1] > new_y:
+                        room, new_room = new_room, room
+                        new_x, new_y = new_room.position
+
+                    if new_room.master is None and new_room.merged_with == [] and not new_room.end:
+                        # Calculate new size considering positions and sizes of both rooms
+                        if (room.position[0] == new_room.position[0] and room.size[0] == new_room.size[0]) or (room.position[1] == new_room.position[1] and room.size[1] == new_room.size[1]):
+                            if room.position[0] == new_room.position[0]:
+                                new_size = (room.size[0], room.size[1] + new_room.size[1])
+                            else:
+                                new_size = (room.size[0] + new_room.size[0], room.size[1])
+                            if new_size in valid_sizes:
+                                new_room.master = room.position
+                                room.merged_with.append(grid[new_x, new_y])
+                                merges += 1
+                                room.size = new_size
+                                new_room.size = new_size
+    #
+    #                             print(f"Merged room {room.position} with room {new_room.position} to size {room.size}")
+    #                             #print(f"Room position: {room.position}, size: {room.size}, neighbors: {room.neighbors}, master: {room.master}, merged_with: {room.merged_with}")
+    #                             #print(f"New room position: {new_room.position}, size: {new_room.size}, neighbors: {new_room.neighbors}, master: {new_room.master}, merged_with: {new_room.merged_with}")
 
     return grid
