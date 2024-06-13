@@ -31,6 +31,15 @@ direction_dict = {
 valid_sizes = [(1, 2), (2, 1), (1, 3), (3, 1), (2, 2)]
 
 
+def make_empty_room(size):
+    default_dimensions = (11, 15)
+    dimensions = [a * b for a, b in zip(size, default_dimensions)]
+    room_layout = np.ones(dimensions)
+    room_layout[1:-1, 1:-1] = 0
+
+    return room_layout
+
+
 class Neighbor:
     position: tuple[int, int]
     direction: Direction
@@ -56,6 +65,18 @@ class Room:
         self.neighbors = []
         self.master = None
         self.merged_with = []
+        self.layout = make_empty_room(self.size)
+
+    def add_doors(self):
+        for neighbor in self.neighbors:
+            if neighbor.direction == Direction.UP:
+                self.layout[0][int(len(self.layout[0]) / 2)] = 11
+            if neighbor.direction == Direction.DOWN:
+                self.layout[-1][int(len(self.layout[0]) / 2)] = 12
+            if neighbor.direction == Direction.LEFT:
+                self.layout[int(len(self.layout) / 2)][0] = 13
+            if neighbor.direction == Direction.RIGHT:
+                self.layout[int(len(self.layout) / 2)][-1] = 14
 
     def merge_with(self, room, direction):
         self.merged_with.append(room)
