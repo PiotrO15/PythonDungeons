@@ -13,6 +13,12 @@ class Direction(Enum):
     DOWN = 2
     LEFT = 3
 
+    def is_vertical(self):
+        return self == Direction.UP or self == Direction.DOWN
+
+    def opposite(self):
+        return Direction((self.value + 2) % 4)
+
 
 # Dictionary for all the directions
 direction_dict = {
@@ -25,11 +31,20 @@ direction_dict = {
 valid_sizes = [(1, 2), (2, 1), (1, 3), (3, 1), (2, 2)]
 
 
+class Neighbor:
+    position: tuple[int, int]
+    direction: Direction
+
+    def __init__(self, position, direction):
+        self.position = position
+        self.direction = direction
+
+
 class Room:
     position: Tuple[int, int]
     size: tuple[int, int]
     end: bool
-    neighbors: list[Direction]
+    neighbors: list[Neighbor]
     master: typing.Optional[Tuple[int, int]]
     merged_with: list
 
@@ -41,6 +56,15 @@ class Room:
         self.neighbors = []
         self.master = None
         self.merged_with = []
+
+    def merge_with(self, room, direction):
+        self.merged_with.append(room)
+        room.master = self.position
+
+        self.neighbors = [n for n in self.neighbors if not n.direction == direction]
+        room.neighbors = [n for n in room.neighbors if not n.direction == direction.opposite()]
+        self.neighbors.extend(room.neighbors)
+        room.neighbors = []
 
 
 def find_missing_neighbors(grid, dungeon_size, x, y):
@@ -57,17 +81,17 @@ def find_missing_neighbors(grid, dungeon_size, x, y):
 
 def connect_rooms(first_room, second_room, direction):
     if direction == (0, -1):  # Up
-        first_room.neighbors.append(Direction.UP)
-        second_room.neighbors.append(Direction.DOWN)
+        first_room.neighbors.append(Neighbor(first_room.position, Direction.UP))
+        second_room.neighbors.append(Neighbor(second_room.position, Direction.DOWN))
     elif direction == (1, 0):  # Right
-        first_room.neighbors.append(Direction.RIGHT)
-        second_room.neighbors.append(Direction.LEFT)
+        first_room.neighbors.append(Neighbor(first_room.position, Direction.RIGHT))
+        second_room.neighbors.append(Neighbor(second_room.position, Direction.LEFT))
     elif direction == (0, 1):  # Down
-        first_room.neighbors.append(Direction.DOWN)
-        second_room.neighbors.append(Direction.UP)
+        first_room.neighbors.append(Neighbor(first_room.position, Direction.DOWN))
+        second_room.neighbors.append(Neighbor(second_room.position, Direction.UP))
     elif direction == (-1, 0):  # Left
-        first_room.neighbors.append(Direction.LEFT)
-        second_room.neighbors.append(Direction.RIGHT)
+        first_room.neighbors.append(Neighbor(first_room.position, Direction.LEFT))
+        second_room.neighbors.append(Neighbor(second_room.position, Direction.RIGHT))
 
 
 def generate_main_path(dungeon_size, length):
@@ -142,9 +166,9 @@ def add_missing_rooms(grid, dungeon_size):
                     missing_neighbors.append((x, y, direction))
 
         # Select the direction vector that doesn't point to the previous room
-        for direc in list(room.neighbors):
-            if previous_room is None or (x + direction_dict.get(direc)[0], y + direction_dict.get(direc)[1]) != previous_room.position:
-                direction_vector = direction_dict.get(direc)
+        for neighbor in list(room.neighbors):
+            if previous_room is None or (x + direction_dict.get(neighbor.direction)[0], y + direction_dict.get(neighbor.direction)[1]) != previous_room.position:
+                direction_vector = direction_dict.get(neighbor.direction)
                 break
 
         to_visit.append((x + direction_vector[0], y + direction_vector[1]))
@@ -163,6 +187,13 @@ def add_missing_rooms(grid, dungeon_size):
             missing_neighbors.remove((x, y, direction))
 
 
+def get_master(room, grid):
+    if room.master is None:
+        return room
+    else:
+        return get_master(grid[room.master[0], room.master[1]], grid)
+
+
 def generate_dungeon(dungeon_size, room_count):
     # Generate the main path
     grid = generate_main_path(dungeon_size, room_count)
@@ -173,38 +204,43 @@ def generate_dungeon(dungeon_size, room_count):
     # Merge rooms
     max_merges = 10
     merges = 0
+    merge_attempts = 0
+    max_merge_attempts = 100
 
-    while merges < max_merges:
+    while merges < max_merges and merge_attempts < max_merge_attempts:
+        merge_attempts += 1
         room = grid[random.randint(0, dungeon_size - 1), random.randint(0, dungeon_size - 1)]
-        while room.master is not None:
-            room = grid[room.master[0], room.master[1]]
+        room = get_master(room, grid)
 
-        if not room.end:
-            if len(room.neighbors) >= 1:
-                direction = random.choice(room.neighbors)
-                direction_vector = direction_dict.get(direction)
-                new_x, new_y = room.position[0] + direction_vector[0], room.position[1] + direction_vector[1]
-                if 0 <= new_x < dungeon_size and 0 <= new_y < dungeon_size:
-                    new_room = grid[new_x, new_y]
-                    while new_room.master is not None:
-                        new_room = grid[new_room.master[0], new_room.master[1]]
-                    if room.position[0] > new_x or room.position[1] > new_y:
-                        room, new_room = new_room, room
-                        new_x, new_y = new_room.position
+        swapped = False
 
-                    if new_room.master is None and new_room.merged_with == [] and not new_room.end:
-                        # Calculate new size considering positions and sizes of both rooms
-                        if (room.position[0] == new_room.position[0] and room.size[0] == new_room.size[0]) or (room.position[1] == new_room.position[1] and room.size[1] == new_room.size[1]):
-                            if room.position[0] == new_room.position[0]:
-                                new_size = (room.size[0], room.size[1] + new_room.size[1])
+        if len(room.neighbors) >= 1:
+            direction = random.choice(room.neighbors).direction
+            direction_vector = direction_dict.get(direction)
+            new_x, new_y = room.position[0] + direction_vector[0], room.position[1] + direction_vector[1]
+            if 0 <= new_x < dungeon_size and 0 <= new_y < dungeon_size:
+                new_room = grid[new_x, new_y]
+                new_room = get_master(new_room, grid)
+                if room.position[0] > new_x or room.position[1] > new_y:
+                    room, new_room = new_room, room
+                    swapped = True
+
+                if new_room.master is None and not new_room.end and not room.end:
+                    # Calculate new size considering positions and sizes of both rooms
+                    if (direction.is_vertical() and room.size[0] == new_room.size[0] and new_room.position[0] == room.position[0] or
+                            not direction.is_vertical() and room.size[1] == new_room.size[1] and new_room.position[1] == room.position[1]):
+                        if direction.is_vertical():
+                            new_size = (room.size[0], room.size[1] + new_room.size[1])
+                        else:
+                            new_size = (room.size[0] + new_room.size[0], room.size[1])
+                        if new_size in valid_sizes:
+                            if swapped:
+                                room.merge_with(new_room, direction.opposite())
                             else:
-                                new_size = (room.size[0] + new_room.size[0], room.size[1])
-                            if new_size in valid_sizes:
-                                new_room.master = room.position
-                                room.merged_with.append(grid[new_x, new_y])
-                                merges += 1
-                                room.size = new_size
-                                new_room.size = new_size
+                                room.merge_with(new_room, direction)
+                            merges += 1
+                            room.size = new_size
+                            new_room.size = new_size
     #
     #                             print(f"Merged room {room.position} with room {new_room.position} to size {room.size}")
     #                             #print(f"Room position: {room.position}, size: {room.size}, neighbors: {room.neighbors}, master: {room.master}, merged_with: {room.merged_with}")

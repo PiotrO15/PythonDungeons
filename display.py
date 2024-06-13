@@ -84,27 +84,27 @@ class DungeonGenerator(QWidget):
                         else:
                             painter.fillRect(rect, Qt.gray)
                     # Draw doors
-                    if Direction.UP in self.dungeon[x, y].neighbors:
-                        door_rect = QRect(margin + x * cell_size + (cell_size - door_size) // 2,
-                                          margin + y * cell_size - cell_size * 0.1 + 5,
-                                          door_size, 5)
-                        painter.fillRect(door_rect, Qt.red)
-                    if Direction.RIGHT in self.dungeon[x, y].neighbors:
-                        door_rect = QRect(margin + (x + 1) * cell_size - cell_size * 0.1,
-                                          margin + y * cell_size + (cell_size - door_size) // 2,
-                                          5, door_size)
-                        painter.fillRect(door_rect, Qt.blue)
-                    if Direction.DOWN in self.dungeon[x, y].neighbors:
-                        door_rect = QRect(margin + x * cell_size + (cell_size - door_size) // 2,
-                                          margin + (y + 1) * cell_size - cell_size * 0.1,
-                                          door_size, 5)
-                        painter.fillRect(door_rect, Qt.green)
-                    if Direction.LEFT in self.dungeon[x, y].neighbors:
-                        door_rect = QRect(margin + x * cell_size - cell_size * 0.1 + 5,
-                                          margin + y * cell_size + (cell_size - door_size) // 2,
-                                          5, door_size)
-                        painter.fillRect(door_rect, Qt.yellow)
-                    painter.drawRect(rect)
+                    for neighbor in room.neighbors:
+                        if neighbor.direction == Direction.UP:
+                            door_rect = QRect(margin + neighbor.position[0] * cell_size + (cell_size - door_size) // 2,
+                                              margin + neighbor.position[1] * cell_size - cell_size * 0.1 + 5,
+                                              door_size, 5)
+                            painter.fillRect(door_rect, Qt.red)
+                        if neighbor.direction == Direction.RIGHT:
+                            door_rect = QRect(margin + (neighbor.position[0] + 1) * cell_size - cell_size * 0.1,
+                                              margin + neighbor.position[1] * cell_size + (cell_size - door_size) // 2,
+                                              5, door_size)
+                            painter.fillRect(door_rect, Qt.blue)
+                        if neighbor.direction == Direction.DOWN:
+                            door_rect = QRect(margin + neighbor.position[0] * cell_size + (cell_size - door_size) // 2,
+                                              margin + (neighbor.position[1] + 1) * cell_size - cell_size * 0.1,
+                                              door_size, 5)
+                            painter.fillRect(door_rect, Qt.green)
+                        if neighbor.direction == Direction.LEFT:
+                            door_rect = QRect(margin + neighbor.position[0] * cell_size - cell_size * 0.1 + 5,
+                                              margin + neighbor.position[1] * cell_size + (cell_size - door_size) // 2,
+                                              5, door_size)
+                            painter.fillRect(door_rect, Qt.yellow)
 
         painter.end()
         return pixmap
