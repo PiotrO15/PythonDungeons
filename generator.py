@@ -74,7 +74,7 @@ class Room:
         for neighbor in self.neighbors:
             grid_diff_x = neighbor.position[0] - self.position[0]
             grid_diff_y = neighbor.position[1] - self.position[1]
-            print(grid_diff_x, grid_diff_y)
+            # print(grid_diff_x, grid_diff_y)
             door_cords = (0, 0)
 
             if neighbor.direction == Direction.UP:
@@ -86,7 +86,7 @@ class Room:
             elif neighbor.direction == Direction.RIGHT:
                 door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[1]), -1)
 
-            print(door_cords)
+            # print(door_cords)
             self.layout[door_cords[0]][door_cords[1]] = 11
             doors[door_cords] = neighbor.position
 

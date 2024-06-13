@@ -1,12 +1,8 @@
 import pygame
 
-from src import game, utils
+from src import utils
 
 TILE_SIZE = utils.TILE_SIZE
-WORLD_SIZE = utils.WORLD_SIZE
-
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 800
 
 # Define colors
 background_color = (20, 0, 10)
@@ -24,7 +20,10 @@ colors_dict = {
 }
 
 def draw_room(dungeon_layout, screen):
-    #TODO: center the display
+    room_size = (len(dungeon_layout[0]) * TILE_SIZE, len(dungeon_layout) * TILE_SIZE)
+    top_left_corner = [(a - b)/2 for a, b in zip(utils.SCREEN_SIZE, room_size)]
+    # print(room_size)
+    # print(top_left_corner)
 
     # Clear the screen
     screen.fill(background_color)
@@ -32,7 +31,7 @@ def draw_room(dungeon_layout, screen):
     # Draw the dungeon
     for y, row in enumerate(dungeon_layout):
         for x, tile in enumerate(row):
-            rect = pygame.Rect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+            rect = pygame.Rect(top_left_corner[0] + x * TILE_SIZE, top_left_corner[1] + y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
 
             pygame.draw.rect(screen, colors_dict.get(tile, unknown_color), rect)
 
