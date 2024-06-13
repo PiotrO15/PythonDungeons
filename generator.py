@@ -25,6 +25,14 @@ direction_dict = {
 valid_sizes = [(1, 2), (2, 1), (1, 3), (3, 1), (2, 2)]
 
 
+def make_empty_room(size):
+    default_dimensions = (11, 15)
+    dimensions = [a * b for a, b in zip(size, default_dimensions)]
+    room_layout = np.ones(dimensions)
+    room_layout[1:-1, 1:-1] = 0
+
+    return room_layout
+
 class Room:
     position: Tuple[int, int]
     size: tuple[int, int]
@@ -32,6 +40,7 @@ class Room:
     neighbors: list[Direction]
     master: typing.Optional[Tuple[int, int]]
     merged_with: list
+    layout: []
 
     def __init__(self, x, y):
         self.position = (x, y)
@@ -41,7 +50,13 @@ class Room:
         self.neighbors = []
         self.master = None
         self.merged_with = []
+        self.layout = make_empty_room(self.size)
 
+    def add_doors(self):
+        if Direction.UP in self.neighbors: self.layout[0][int(len(self.layout[0]) / 2)] = 11
+        if Direction.DOWN in self.neighbors: self.layout[-1][int(len(self.layout[0]) / 2)] = 12
+        if Direction.LEFT in self.neighbors: self.layout[int(len(self.layout) / 2)][0] = 13
+        if Direction.RIGHT in self.neighbors: self.layout[int(len(self.layout) / 2)][-1] = 14
 
 def find_missing_neighbors(grid, dungeon_size, x, y):
     missing_neighbors = []

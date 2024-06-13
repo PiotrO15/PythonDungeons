@@ -1,6 +1,8 @@
 import pygame
 
-import pygame_test_map
+import generator
+from src import utils
+from src.map import pygame_test_map, display_map
 # from .entities.enemy_manager import EnemyManager
 from src.entities.player import Player
 # from .menu import MainMenu
@@ -13,17 +15,20 @@ import time
 pygame.init()
 pygame.mixer.init()
 
-world_size = (21 * 64, 14 * 64)
 
 class Game:
     def __init__(self):
-        self.display = pygame.display.set_mode(world_size)
-        self.screen = pygame.Surface(world_size).convert()
+        self.display = pygame.display.set_mode(utils.SCREEN_SIZE)
+        self.screen = pygame.Surface(utils.SCREEN_SIZE).convert()
         self.clock = pygame.time.Clock()
         # self.enemy_manager = EnemyManager(self)
         # self.world_manager = WorldManager(self)
 
-        self.dungeon_layout = pygame_test_map.create_room(21, 14)
+        #self.dungeon_layout = pygame_test_map.create_room(21, 14) # TODO change
+        room = generator.Room(2, 1)
+        room.neighbors.append(generator.Direction.RIGHT)
+        room.add_doors()
+        self.dungeon_layout = room.layout
 
         # self.object_manager = ObjectManager(self)
         self.player = Player(self)
@@ -54,11 +59,11 @@ class Game:
 
     def draw_groups(self):
         # self.world_manager.draw_map(self.screen)
-        pygame_test_map.draw_map(self.dungeon_layout, self.screen)
+        display_map.draw_room(self.dungeon_layout, self.screen)
         if self.player:
             self.player.draw(self.screen)
         #self.enemy_manager.draw_enemies(self.screen)
-        #self.object_manager.draw()
+        #self.object_manager.draw_objects()
         #self.mini_map.draw(self.screen)
         #self.hud.draw()
 

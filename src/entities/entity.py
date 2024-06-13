@@ -57,7 +57,7 @@ class Entity:
 
         screen_surface = self.game.display
         try:
-            if any(screen_surface.get_at(point) in [(0,0,0), (30, 50, 50)] for point in collide_points):
+            if any(screen_surface.get_at(point) in [(30, 50, 50)] for point in collide_points):
                 self.velocity = [0, 0]
         except: self.velocity = [0, 0]
 

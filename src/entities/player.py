@@ -5,7 +5,7 @@ from src.entities.entity import Entity
 
 class Player(Entity):
     name = 'player'
-    speed = 250
+    speed = 400
     max_hp = 100
     gold = 0
     shield = 1
@@ -26,7 +26,7 @@ class Player(Entity):
 
         if pressed[pygame.K_e] and pygame.time.get_ticks() - self.time > 300:
             self.time = pygame.time.get_ticks()
-            #self.game.object_manager.interact()
+            # interact with objects
 
         constant_dt = self.game.dt
         speed_adj = self.speed * constant_dt
