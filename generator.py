@@ -5,6 +5,8 @@ import random
 from enum import Enum
 import typing
 
+from src import utils
+
 
 # Enum for all the directions
 class Direction(Enum):
@@ -32,8 +34,7 @@ valid_sizes = [(1, 2), (2, 1), (1, 3), (3, 1), (2, 2)]
 
 
 def make_empty_room(size):
-    default_dimensions = (11, 15)
-    dimensions = [a * b for a, b in zip(size, default_dimensions)]
+    dimensions = [a * b for a, b in zip(size, utils.ROOM_DIMENSIONS)]
     room_layout = np.ones(dimensions)
     room_layout[1:-1, 1:-1] = 0
 
@@ -68,15 +69,28 @@ class Room:
         self.layout = make_empty_room(self.size)
 
     def add_doors(self):
+        doors: dict[tuple[int, int], tuple[int, int]] = {}
+
         for neighbor in self.neighbors:
+            grid_diff_x = neighbor.position[0] - self.position[0]
+            grid_diff_y = neighbor.position[1] - self.position[1]
+            print(grid_diff_x, grid_diff_y)
+            door_cords = (0, 0)
+
             if neighbor.direction == Direction.UP:
-                self.layout[0][int(len(self.layout[0]) / 2)] = 11
-            if neighbor.direction == Direction.DOWN:
-                self.layout[-1][int(len(self.layout[0]) / 2)] = 12
-            if neighbor.direction == Direction.LEFT:
-                self.layout[int(len(self.layout) / 2)][0] = 13
-            if neighbor.direction == Direction.RIGHT:
-                self.layout[int(len(self.layout) / 2)][-1] = 14
+                door_cords = (0, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[1]))
+            elif neighbor.direction == Direction.DOWN:
+                door_cords = (-1, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[1]))
+            elif neighbor.direction == Direction.LEFT:
+                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[0]), 0)
+            elif neighbor.direction == Direction.RIGHT:
+                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[0]), -1)
+
+            print(door_cords)
+            self.layout[door_cords[0]][door_cords[1]] = 11
+            doors[door_cords] = neighbor.position
+
+        return doors
 
     def merge_with(self, room, direction):
         self.merged_with.append(room)

@@ -4,14 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="712dc8a5-1718-49e9-b028-43fc17eda2d3" name="Changes" comment="entity setup, basic player movement and collisions">
+    <list default="true" id="712dc8a5-1718-49e9-b028-43fc17eda2d3" name="Changes" comment="room display, empty room layout, adding doors based on neighbouring rooms">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/generator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/entities/entity.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/entity.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/entities/player.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/entities/player.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pygame_test_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/pygame_test_map.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -50,17 +48,17 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.display.executor": "Run",
-    "Python.display_pygame.executor": "Run",
-    "Python.game.executor": "Run",
-    "Python.generator.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.display.executor&quot;: &quot;Run&quot;,
+    &quot;Python.display_pygame.executor&quot;: &quot;Run&quot;,
+    &quot;Python.game.executor&quot;: &quot;Run&quot;,
+    &quot;Python.generator.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Natalia Dyś\PycharmProjects\PythonDungeons\src" />
@@ -116,7 +114,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718222696713</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="room display, empty room layout, adding doors based on neighbouring rooms">
+      <option name="closed" value="true" />
+      <created>1718295026765</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1718295026765</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -132,6 +138,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="entity setup, basic player movement and collisions" />
-    <option name="LAST_COMMIT_MESSAGE" value="entity setup, basic player movement and collisions" />
+    <MESSAGE value="room display, empty room layout, adding doors based on neighbouring rooms" />
+    <option name="LAST_COMMIT_MESSAGE" value="room display, empty room layout, adding doors based on neighbouring rooms" />
   </component>
 </project>

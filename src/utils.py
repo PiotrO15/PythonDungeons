@@ -2,10 +2,11 @@ import csv
 import os
 import pygame
 
-SCREEN_SIZE = (1000, 800)
+SCREEN_SIZE = (1200, 1000)
 
 TILE_SIZE = 40
 WORLD_SIZE = (21 * TILE_SIZE, 14 * TILE_SIZE)
+ROOM_DIMENSIONS = (11, 15) # (y, x)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 basic_entity_size = (40, 40)

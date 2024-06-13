@@ -25,8 +25,11 @@ class Game:
         # self.world_manager = WorldManager(self)
 
         #self.dungeon_layout = pygame_test_map.create_room(21, 14) # TODO change
-        room = generator.Room(2, 1)
-        room.neighbors.append(generator.Direction.RIGHT)
+        room = generator.Room(1, 1)
+        room.neighbors.append(generator.Neighbor((2, 1), generator.Direction.RIGHT))
+        room.neighbors.append(generator.Neighbor((0, 1), generator.Direction.LEFT))
+        room.neighbors.append(generator.Neighbor((1, 0), generator.Direction.UP))
+        room.neighbors.append(generator.Neighbor((1, 2), generator.Direction.DOWN))
         room.add_doors()
         self.dungeon_layout = room.layout
 
