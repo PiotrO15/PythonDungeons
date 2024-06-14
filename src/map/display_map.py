@@ -19,8 +19,8 @@ colors_dict = {
     100:(255, 140, 80)  # test
 }
 
-def draw_room(dungeon_layout, screen):
-    room_size = (len(dungeon_layout[0]) * TILE_SIZE, len(dungeon_layout) * TILE_SIZE)
+def draw_room(room_layout, screen):
+    room_size = (len(room_layout[0]) * TILE_SIZE, len(room_layout) * TILE_SIZE)
     top_left_corner = [(a - b)/2 for a, b in zip(utils.SCREEN_SIZE, room_size)]
     # print(room_size)
     # print(top_left_corner)
@@ -29,7 +29,7 @@ def draw_room(dungeon_layout, screen):
     screen.fill(background_color)
 
     # Draw the dungeon
-    for y, row in enumerate(dungeon_layout):
+    for y, row in enumerate(room_layout):
         for x, tile in enumerate(row):
             rect = pygame.Rect(top_left_corner[0] + x * TILE_SIZE, top_left_corner[1] + y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
 

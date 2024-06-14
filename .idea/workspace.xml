@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="712dc8a5-1718-49e9-b028-43fc17eda2d3" name="Changes" comment="fix doors">
+    <list default="true" id="712dc8a5-1718-49e9-b028-43fc17eda2d3" name="Changes" comment="center room display">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/generator.py" beforeDir="false" afterPath="$PROJECT_DIR$/generator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/game.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/map/display_map.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/map/display_map.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -136,7 +135,15 @@
       <option name="project" value="LOCAL" />
       <updated>1718309555397</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="center room display">
+      <option name="closed" value="true" />
+      <created>1718310570549</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1718310570549</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -154,6 +161,7 @@
     <MESSAGE value="entity setup, basic player movement and collisions" />
     <MESSAGE value="room display, empty room layout, adding doors based on neighbouring rooms" />
     <MESSAGE value="fix doors" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix doors" />
+    <MESSAGE value="center room display" />
+    <option name="LAST_COMMIT_MESSAGE" value="center room display" />
   </component>
 </project>

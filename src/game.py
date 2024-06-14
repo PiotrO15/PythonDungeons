@@ -23,15 +23,20 @@ class Game:
         self.clock = pygame.time.Clock()
         # self.enemy_manager = EnemyManager(self)
         # self.world_manager = WorldManager(self)
+        self.dungeon_size = 5
+        self.room_count = 10
+
+        self.dungeon = generator.generate_dungeon(self.dungeon_size, self.room_count)
 
         #self.dungeon_layout = pygame_test_map.create_room(21, 14) # TODO change
-        room = generator.Room(1, 1)
-        room.neighbors.append(generator.Neighbor((2, 1), generator.Direction.RIGHT))
-        room.neighbors.append(generator.Neighbor((0, 1), generator.Direction.LEFT))
-        room.neighbors.append(generator.Neighbor((1, 0), generator.Direction.UP))
-        room.neighbors.append(generator.Neighbor((1, 2), generator.Direction.DOWN))
-        room.add_doors()
-        self.dungeon_layout = room.layout
+        # room = generator.Room(1, 1)
+        # room.neighbors.append(generator.Neighbor((2, 1), generator.Direction.RIGHT))
+        # room.neighbors.append(generator.Neighbor((0, 1), generator.Direction.LEFT))
+        # room.neighbors.append(generator.Neighbor((1, 0), generator.Direction.UP))
+        # room.neighbors.append(generator.Neighbor((1, 2), generator.Direction.DOWN))
+        # room.add_doors()
+        # self.current_room = room.layout
+        self.current_room = self.dungeon[0,0].layout
 
         # self.object_manager = ObjectManager(self)
         self.player = Player(self)
@@ -62,7 +67,7 @@ class Game:
 
     def draw_groups(self):
         # self.world_manager.draw_map(self.screen)
-        display_map.draw_room(self.dungeon_layout, self.screen)
+        display_map.draw_room(self.current_room, self.screen)
         if self.player:
             self.player.draw(self.screen)
         #self.enemy_manager.draw_enemies(self.screen)
