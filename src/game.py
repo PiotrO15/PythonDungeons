@@ -12,6 +12,7 @@ from src.entities.player import Player
 # from .objects.object_manager import ObjectManager
 # from .game_over import GameOver
 import time
+
 pygame.init()
 pygame.mixer.init()
 
@@ -28,15 +29,7 @@ class Game:
 
         self.dungeon = generator.generate_dungeon(self.dungeon_size, self.room_count)
 
-        #self.dungeon_layout = pygame_test_map.create_room(21, 14) # TODO change
-        # room = generator.Room(1, 1)
-        # room.neighbors.append(generator.Neighbor((2, 1), generator.Direction.RIGHT))
-        # room.neighbors.append(generator.Neighbor((0, 1), generator.Direction.LEFT))
-        # room.neighbors.append(generator.Neighbor((1, 0), generator.Direction.UP))
-        # room.neighbors.append(generator.Neighbor((1, 2), generator.Direction.DOWN))
-        # room.add_doors()
-        # self.current_room = room.layout
-        self.current_room = self.dungeon[0,0].layout
+        self.current_room = self.dungeon[0, 0].layout
 
         # self.object_manager = ObjectManager(self)
         self.player = Player(self)
@@ -51,8 +44,6 @@ class Game:
         self.dt = 0
         self.screen_position = (0, 0)
 
-
-
     def refresh(self):
         self.__init__()
         pygame.display.flip()
@@ -66,8 +57,8 @@ class Game:
         # self.mini_map.update()
 
     def draw_groups(self):
-        # self.world_manager.draw_map(self.screen)
         display_map.draw_room(self.current_room, self.screen)
+
         if self.player:
             self.player.draw(self.screen)
         #self.enemy_manager.draw_enemies(self.screen)

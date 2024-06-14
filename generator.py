@@ -33,13 +33,6 @@ direction_dict = {
 valid_sizes = [(1, 2), (2, 1), (1, 3), (3, 1), (2, 2)]
 
 
-def make_empty_room(size):
-    dimensions = [a * b for a, b in zip(size, utils.ROOM_DIMENSIONS)]
-    room_layout = np.ones((dimensions[1], dimensions[0]))
-    room_layout[1:-1, 1:-1] = 0
-
-    return room_layout
-
 
 class Neighbor:
     position: tuple[int, int]
@@ -64,10 +57,19 @@ class Room:
 
         self.end = False
         self.neighbors = []
+        self.doors = []
         self.master = None
         self.merged_with = []
-        self.layout = make_empty_room(self.size)
+        self.layout = self.make_empty_layout()
 
+    def make_empty_layout(self):
+        dimensions = [a * b for a, b in zip(self.size, utils.ROOM_DIMENSIONS)]
+        # room_layout = np.ones((dimensions[1], dimensions[0]))
+        room_layout = np.ones(dimensions)
+        room_layout[1:-1, 1:-1] = 0
+
+        self.layout = room_layout
+        return room_layout
     def add_doors(self):
         doors: dict[tuple[int, int], tuple[int, int]] = {}
 
@@ -78,17 +80,18 @@ class Room:
             door_cords = (0, 0)
 
             if neighbor.direction == Direction.UP:
-                door_cords = (0, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
+                door_cords = (0, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[1]))
             elif neighbor.direction == Direction.DOWN:
-                door_cords = (-1, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
+                door_cords = (-1, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[1]))
             elif neighbor.direction == Direction.LEFT:
-                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[1]), 0)
+                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[0]), 0)
             elif neighbor.direction == Direction.RIGHT:
-                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[1]), -1)
+                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[0]), -1)
 
             # print(door_cords)
-            self.layout[door_cords[0]][door_cords[1]] = 11
+            # self.layout[door_cords[0]][door_cords[1]] = 11 #TODO fix
             doors[door_cords] = neighbor.position
+            self.doors = doors
 
         return doors
 
@@ -228,6 +231,13 @@ def get_master(room, grid):
     else:
         return get_master(grid[room.master[0], room.master[1]], grid)
 
+def fill_rooms(grid):
+    for x in range(len(grid)):
+        for y in range(len(grid)):
+            if grid[x, y].master is None:
+                grid[x, y].make_empty_layout()
+                grid[x, y].add_doors()
+
 
 def generate_dungeon(dungeon_size, room_count):
     # Generate the main path
@@ -280,5 +290,7 @@ def generate_dungeon(dungeon_size, room_count):
     #                             print(f"Merged room {room.position} with room {new_room.position} to size {room.size}")
     #                             #print(f"Room position: {room.position}, size: {room.size}, neighbors: {room.neighbors}, master: {room.master}, merged_with: {room.merged_with}")
     #                             #print(f"New room position: {new_room.position}, size: {new_room.size}, neighbors: {new_room.neighbors}, master: {new_room.master}, merged_with: {new_room.merged_with}")
+
+    fill_rooms(grid)
 
     return grid

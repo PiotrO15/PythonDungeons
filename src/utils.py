@@ -4,11 +4,11 @@ import pygame
 
 SCREEN_SIZE = (1200, 1000)
 
-TILE_SIZE = 40
-ROOM_DIMENSIONS = (15, 11) # (y, x)
+TILE_SIZE = 30
+ROOM_DIMENSIONS = (9, 13) # (y, x)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
-basic_entity_size = (40, 40)
+basic_entity_size = (30, 30)
 font = './assets/Minecraft.ttf'
 map_center = []
 
