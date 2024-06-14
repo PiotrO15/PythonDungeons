@@ -29,7 +29,7 @@ class Game:
 
         self.dungeon = generator.generate_dungeon(self.dungeon_size, self.room_count)
 
-        self.current_room = self.dungeon[0, 0].layout
+        self.current_room = self.dungeon[0, 0]
 
         # self.object_manager = ObjectManager(self)
         self.player = Player(self)

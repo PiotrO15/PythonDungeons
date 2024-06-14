@@ -2,9 +2,9 @@ import csv
 import os
 import pygame
 
-SCREEN_SIZE = (1200, 1000)
+SCREEN_SIZE = (1600, 1000)
 
-TILE_SIZE = 30
+TILE_SIZE = 32
 ROOM_DIMENSIONS = (13, 9) # (y, x)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -25,7 +25,6 @@ def read_csv(filename):
         for row in data:
             array.append(list(row))
     return array
-
 
 def get_mask_rect(surf, top=0, left=0):
     """Returns minimal bounding rectangle of an image"""

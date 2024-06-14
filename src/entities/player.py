@@ -5,7 +5,7 @@ from src.entities.entity import Entity
 
 class Player(Entity):
     name = 'player'
-    speed = 400
+    speed = 300
     max_hp = 100
     gold = 0
     shield = 1
@@ -15,9 +15,8 @@ class Player(Entity):
 
     def __init__(self, game):
         Entity.__init__(self, game, self.name)
-        self.rect = self.image.get_rect(center=(self.game.display.get_width()/2, self.game.display.get_height()/2))
+        self.center()
         self.weapon = None
-        self.attacking = False
         self.attack_cooldown = 350  # ms
         self.room = None
 
@@ -38,10 +37,6 @@ class Player(Entity):
         # print(vel)
         self.set_velocity(vel)
 
-        if pygame.mouse.get_pressed()[0] and pygame.time.get_ticks() - self.time > self.attack_cooldown \
-                and self.weapon:
-            self.time = pygame.time.get_ticks()
-            self.attacking = True
 
     def update(self) -> None:
         if self.dead:
@@ -50,9 +45,27 @@ class Player(Entity):
         if self.can_move:
             self.rect.move_ip(*self.velocity)
             self.hitbox.move_ip(*self.velocity)
+        self.use_door()
         self.detect_death()
 
         self.update_hitbox()
+
+    def center(self):
+        self.rect = self.image.get_rect(center=(self.game.display.get_width() / 2, self.game.display.get_height() / 2))
+
+    def use_door(self):
+        screen_surface = self.game.display
+
+        for entry in self.game.current_room.doors_rect:
+            if entry['rect'].collidepoint(self.hitbox.midbottom):
+                # print('s')
+                next_room = entry['destination']
+                print(next_room)
+                self.game.current_room = self.game.dungeon[next_room]
+                while self.game.current_room.master: self.game.current_room = self.game.dungeon[self.game.current_room.master]
+                self.center()
+                break
+
 
     def calculate_collision(self, enemy):
         if not self.shield and not self.dead:
@@ -67,3 +80,5 @@ class Player(Entity):
         if self.dead:
             return
         surface.blit(self.image, self.rect)
+
+

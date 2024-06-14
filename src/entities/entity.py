@@ -41,7 +41,6 @@ class Entity:
 
             # self.drop_items()
 
-
     def basic_update(self):
         self.detect_death()
         self.update_hitbox()
@@ -59,6 +58,7 @@ class Entity:
         try:
             if any(screen_surface.get_at(point) in [(30, 50, 50)] for point in collide_points):
                 self.velocity = [0, 0]
+                # print('collision')
         except: self.velocity = [0, 0]
 
     def update_hitbox(self):

@@ -33,7 +33,6 @@ direction_dict = {
 valid_sizes = [(1, 2), (2, 1), (1, 3), (3, 1), (2, 2)]
 
 
-
 class Neighbor:
     position: tuple[int, int]
     direction: Direction
@@ -57,7 +56,8 @@ class Room:
 
         self.end = False
         self.neighbors = []
-        self.doors = []
+        self.doors = {}
+        self.doors_rect = []
         self.master = None
         self.merged_with = []
         self.layout = []
@@ -70,27 +70,37 @@ class Room:
 
         self.layout = room_layout
         return room_layout
+
     def add_doors(self):
         doors: dict[tuple[int, int], tuple[int, int]] = {}
 
         for neighbor in self.neighbors:
-            grid_diff_x = neighbor.position[0] - self.position[0]
-            grid_diff_y = neighbor.position[1] - self.position[1]
-            # print(grid_diff_x, grid_diff_y)
             door_cords = (0, 0)
+            # destination = neighbor.position
+            destination = [a + b for a, b in zip(neighbor.position, direction_dict[neighbor.direction])]
+
+            offset_x = neighbor.position[0] - self.position[0]
+            offset_y = neighbor.position[1] - self.position[1]
+            # print(offset_x, offset_y)
 
             if neighbor.direction == Direction.UP:
-                door_cords = (0, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
+                door_cords = (0, int((offset_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
+                # destination[1] -= 1
             elif neighbor.direction == Direction.DOWN:
-                door_cords = (-1, int((grid_diff_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
+                door_cords = (len(self.layout)-1, int((offset_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
+                # destination[1] += 1
             elif neighbor.direction == Direction.LEFT:
-                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[1]), 0)
+                door_cords = (int((offset_y + 0.5) * utils.ROOM_DIMENSIONS[1]), 0)
+                # destination[0] -= 1
             elif neighbor.direction == Direction.RIGHT:
-                door_cords = (int((grid_diff_y + 0.5) * utils.ROOM_DIMENSIONS[1]), -1)
+                door_cords = (int((offset_y + 0.5) * utils.ROOM_DIMENSIONS[1]), len(self.layout[0])-1)
+                # destination[0] += 1
 
             # print(door_cords)
-            self.layout[door_cords[0]][door_cords[1]] = 11 #TODO fix
-            doors[door_cords] = neighbor.position
+
+            self.layout[door_cords[0]][door_cords[1]] = 11
+
+            doors[door_cords] = (destination[0], destination[1])
 
         self.doors = doors
 
@@ -206,7 +216,8 @@ def add_missing_rooms(grid, dungeon_size):
 
         # Select the direction vector that doesn't point to the previous room
         for neighbor in list(room.neighbors):
-            if previous_room is None or (x + direction_dict.get(neighbor.direction)[0], y + direction_dict.get(neighbor.direction)[1]) != previous_room.position:
+            if previous_room is None or (x + direction_dict.get(neighbor.direction)[0],
+                                         y + direction_dict.get(neighbor.direction)[1]) != previous_room.position:
                 direction_vector = direction_dict.get(neighbor.direction)
                 break
 
@@ -231,6 +242,7 @@ def get_master(room, grid):
         return room
     else:
         return get_master(grid[room.master[0], room.master[1]], grid)
+
 
 def fill_rooms(grid):
     for x in range(len(grid)):
@@ -274,8 +286,10 @@ def generate_dungeon(dungeon_size, room_count):
 
                 if new_room.master is None and not new_room.end and not room.end:
                     # Calculate new size considering positions and sizes of both rooms
-                    if (direction.is_vertical() and room.size[0] == new_room.size[0] and new_room.position[0] == room.position[0] or
-                            not direction.is_vertical() and room.size[1] == new_room.size[1] and new_room.position[1] == room.position[1]):
+                    if (direction.is_vertical() and room.size[0] == new_room.size[0] and new_room.position[0] ==
+                            room.position[0] or
+                            not direction.is_vertical() and room.size[1] == new_room.size[1] and new_room.position[1] ==
+                            room.position[1]):
                         if direction.is_vertical():
                             new_size = (room.size[0], room.size[1] + new_room.size[1])
                         else:
