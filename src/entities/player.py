@@ -91,11 +91,11 @@ class Player(Entity):
 
     def calculate_collision(self, enemy):
         if not self.shield and not self.dead:
-            self.hp -= enemy.damage
+            self.hp = max(0, self.hp - enemy.damage)
             #TODO hurt sound / animation?
             if not self.dead:
                 self.hurt = True
-        if self.shield:
+        elif self.shield:
             self.shield -= 1
 
     def draw(self, surface):

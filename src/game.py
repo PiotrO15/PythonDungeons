@@ -9,7 +9,6 @@ from src.entities.player import Player
 # from .mini_map import MiniMap
 from .hud import Hud
 # from .objects.object_manager import ObjectManager
-# from .game_over import GameOver
 import time
 
 pygame.init()
@@ -38,7 +37,6 @@ class Game:
         # self.mini_map = MiniMap(self)
         self.game_time = None
         self.fps = 60
-        # self.game_over = GameOver(self)
         pygame.mixer.init()
         self.dt = 0
         self.screen_position = (0, 0)
