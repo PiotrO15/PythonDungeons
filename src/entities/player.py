@@ -19,7 +19,6 @@ class Player(Entity):
         self.center()
         self.weapon = None
         self.attack_cooldown = 350  # ms
-        self.room = None
 
     def input(self):
         pressed = pygame.key.get_pressed()

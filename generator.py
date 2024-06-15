@@ -58,6 +58,7 @@ class Room:
         self.neighbors = []
         self.doors = {}
         self.doors_rect = []
+        self.enemy_list = []
         self.master = None
         self.merged_with = []
         self.layout = []

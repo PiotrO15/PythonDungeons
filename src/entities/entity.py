@@ -6,7 +6,7 @@ from src.utils import get_mask_rect
 class Entity:
     max_hp = 1000
     def __init__(self, game, name):
-        self.hp = self.max_hp/2
+        self.hp = self.max_hp
         self.game = game
         self.name = name
         self.path = f'..\\assets\\entities\\{self.name}'
@@ -40,7 +40,7 @@ class Entity:
             self.can_move = False
             self.velocity = [0, 0]
 
-            # self.drop_items()
+            self.drop_items()
 
     def basic_update(self):
         self.detect_death()
@@ -49,7 +49,7 @@ class Entity:
         self.hitbox.move_ip(self.velocity)
 
     def wall_collision(self):
-        new_pos_rect = self.hitbox.move(*self.velocity)  # Position after moving, change name later
+        new_pos_rect = self.hitbox.move(*self.velocity)  # Position after moving
 
         room = self.game.current_room
         room_size_px = (room.size[0] * utils.ROOM_DIMENSIONS[0] * utils.TILE_SIZE, room.size[1] * utils.ROOM_DIMENSIONS[1] * utils.TILE_SIZE)
