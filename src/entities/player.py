@@ -27,15 +27,17 @@ class Player(Entity):
             self.time = pygame.time.get_ticks()
             # interact with objects
 
-        constant_dt = self.game.dt
-        speed_adj = self.speed * constant_dt
+        speed_adj = self.speed * self.game.dt
 
-        # Define velocity vectors for each direction
-        vel_y = [0, speed_adj * (pressed[pygame.K_s] - pressed[pygame.K_w])]
-        vel_x = [speed_adj * (pressed[pygame.K_d] - pressed[pygame.K_a]), 0]
-        vel = [vel_x[0], vel_y[1]]
+        # Define velocity for each direction
+        vel_y = (pressed[pygame.K_s] - pressed[pygame.K_w])
+        vel_x = (pressed[pygame.K_d] - pressed[pygame.K_a])
+        velocity = pygame.math.Vector2(vel_x, vel_y)
+        if velocity.length() != 0:
+            velocity.normalize_ip()
+            velocity.scale_to_length(speed_adj)
         # print(vel)
-        self.set_velocity(vel)
+        self.set_velocity(velocity)
 
 
     def update(self) -> None:

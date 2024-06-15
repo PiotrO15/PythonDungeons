@@ -96,7 +96,7 @@ class Game:
             x, y = pygame.mouse.get_pos()
             for enemy in self.current_room.enemy_list:
                 #print('hurt enemies')
-                enemy.hp -= 3
+                enemy.hp -= 4
 
     def run_game(self):
         self.enemy_manager.add_enemies()

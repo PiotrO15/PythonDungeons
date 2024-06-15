@@ -74,13 +74,16 @@ class Enemy(Entity):
     def change_speed(self):  # changes speed every 1.5s
         if time_passed(self.move_time, 100):
             self.move_time = pygame.time.get_ticks()
-            self.speed = random.randint(100, 200)
+            self.speed = random.randint(150, 250)
             return True
 
     def move(self):
         if not self.dead and self.hp > 0 and self.can_move and not self.game.player.dead:
-            if self.hp < self.max_hp / 10:
+            if self.hp / self.max_hp < 0.1:
                 self.move_away_from_player(radius=100)
+            elif self.hp / self.max_hp < 0.2:
+                self.speed = 130
+                self.move_towards_player()
             else:
                 self.move_towards_player()
         else:
@@ -90,7 +93,7 @@ class Enemy(Entity):
         dt = self.game.dt
         dir_vector = pygame.math.Vector2(self.game.player.hitbox.x - self.hitbox.x,
                                          self.game.player.hitbox.y - self.hitbox.y)
-        if dir_vector.length != 0:
+        if dir_vector.length() != 0:
             dir_vector.normalize_ip()
             dir_vector.scale_to_length(self.speed * dt)
         self.set_velocity(dir_vector)
@@ -109,13 +112,14 @@ class Enemy(Entity):
                 self.pick_random_spot()
             dir_vector = pygame.math.Vector2(self.destination_position[0] - self.hitbox.x,
                                              self.destination_position[1] - self.hitbox.y)
-            if dir_vector.length_squared() > 0:
+            if dir_vector.length() != 0:
                 dir_vector.normalize_ip()
                 dir_vector.scale_to_length(self.speed * dt)
                 self.set_velocity(dir_vector)
             else:
                 self.pick_random_spot()
         else:
+            self.pick_random_spot()
             self.set_velocity([0, 0])
 
     def pick_random_spot(self):
