@@ -4,11 +4,12 @@ import src.utils as utils
 from src.utils import get_mask_rect
 
 class Entity:
+    max_hp = 1000
     def __init__(self, game, name):
-        self.hp = 1000
+        self.hp = self.max_hp/2
         self.game = game
         self.name = name
-        self.path = f'assets\\entities\\{self.name}'
+        self.path = f'..\\assets\\entities\\{self.name}'
         self.image = pygame.transform.scale(pygame.image.load(f'{self.path}\\idle.png'),
                                             utils.basic_entity_size).convert_alpha()
         self.rect = self.image.get_rect()

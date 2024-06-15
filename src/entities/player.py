@@ -8,10 +8,10 @@ class Player(Entity):
     name = 'player'
     speed = 300
     max_hp = 100
+    hp = max_hp
     gold = 0
     shield = 1
     strength = 1
-    hp = max_hp
     items = []
 
     def __init__(self, game):

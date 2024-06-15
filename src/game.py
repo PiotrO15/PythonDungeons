@@ -2,12 +2,12 @@ import pygame
 
 import generator
 from src import utils
-from src.map import pygame_test_map, display_map
+from src.map import display_map
 # from .entities.enemy_manager import EnemyManager
 from src.entities.player import Player
 # from .menu import MainMenu
 # from .mini_map import MiniMap
-# from .hud import Hud
+from .hud import Hud
 # from .map.world_manager import WorldManager
 # from .objects.object_manager import ObjectManager
 # from .game_over import GameOver
@@ -26,6 +26,7 @@ class Game:
         # self.world_manager = WorldManager(self)
         self.dungeon_size = 5
         self.room_count = 10
+        self.level = 1
 
         self.dungeon = generator.generate_dungeon(self.dungeon_size, self.room_count)
 
@@ -33,7 +34,7 @@ class Game:
 
         # self.object_manager = ObjectManager(self)
         self.player = Player(self)
-        # self.hud = Hud(self)
+        self.hud = Hud(self)
         self.running = True
         # self.menu = MainMenu(self)
         # self.mini_map = MiniMap(self)
@@ -64,7 +65,7 @@ class Game:
         #self.enemy_manager.draw_enemies(self.screen)
         #self.object_manager.draw_objects()
         #self.mini_map.draw(self.screen)
-        #self.hud.draw()
+        self.hud.draw()
 
     def input(self):
         for event in pygame.event.get():
