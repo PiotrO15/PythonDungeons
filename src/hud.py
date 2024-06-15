@@ -4,6 +4,8 @@ from math import ceil
 
 assets_path = '..\\assets\\hud'
 
+starting_position = (15, 10)
+
 
 class HealthBar:
     hp_per_cell = 10
@@ -19,7 +21,6 @@ class HealthBar:
         self.end = None
         self.path = f'{assets_path}/health_bar'
         self.load_images()
-        self.starting_position = (0, 0)
         self.player = player
 
         self.max_hp_color = (98, 35, 47)
@@ -34,28 +35,42 @@ class HealthBar:
         current_hp = self.player.hp
         max_hp = self.player.max_hp
 
-        max_cells = max_hp/self.hp_per_cell
-        pygame.draw.rect(self.game.screen, self.max_hp_color, (25, 15, max_cells * self.cell_width * (1 + self.margin / self.cell_width), self.cell_height))
+        max_cells = max_hp / self.hp_per_cell
+
+        # draw empty bar
+        position = utils.add_tuples((25, 15), starting_position)
+        pygame.draw.rect(self.game.screen, self.max_hp_color, (position[0], position[1], max_cells * self.cell_width * (1 + self.margin / self.cell_width), self.cell_height))
         n_of_cells = int(current_hp // self.hp_per_cell)
         end_position = None
+
+        # draw the full cells
         for i in range(n_of_cells):
-            pygame.draw.rect(self.game.screen, self.hp_color, (25 + i * (self.cell_width + self.margin), 15, self.cell_width, self.cell_height))  # draw the full cells
+            position = (25 + i * (self.cell_width + self.margin), 15)
+            position = utils.add_tuples(position, starting_position)
+
+            pygame.draw.rect(self.game.screen, self.hp_color,
+                             (position[0], position[1], self.cell_width, self.cell_height))
             end_position = (25 + i * (self.cell_width + self.margin) + 15)
         if end_position:
-            pygame.draw.rect(self.game.screen, self.hp_color, (end_position, 15, current_hp % self.hp_per_cell, self.cell_height))
+            pygame.draw.rect(self.game.screen, self.hp_color,
+                             (end_position, 15, current_hp % self.hp_per_cell, self.cell_height))
 
     def draw_container(self):
-        end_position = None
-        self.game.screen.blit(self.start, self.starting_position)
+        position = None
+        self.game.screen.blit(self.start, starting_position)
         for i in range(self.player.max_hp // self.hp_per_cell):
-            end_position = (i * (self.cell_width + self.margin) + 40, 0)
-            self.game.screen.blit(self.cell, end_position)
-        self.game.screen.blit(self.end, end_position)
+            position = (i * (self.cell_width + self.margin) + 40, 0)
+            position = utils.add_tuples(position, starting_position)
+            self.game.screen.blit(self.cell, position)
+        self.game.screen.blit(self.end, position)
 
     def draw_text(self):
         text_hp = f'HP: {self.player.hp}/{self.player.max_hp}'
         text_surface = pygame.font.Font(utils.font, 20).render(text_hp, True, (255, 255, 255))
-        self.game.screen.blit(text_surface, ((self.player.max_hp // self.hp_per_cell) * (self.cell_width + self.margin) + 60, 15))
+        position = ((self.player.max_hp // self.hp_per_cell) * (self.cell_width + self.margin) + 60, 15)
+        position = utils.add_tuples(position, starting_position)
+        self.game.screen.blit(text_surface, position)
+
     def draw(self):
         self.draw_health_rectangle()
         self.draw_container()
@@ -68,7 +83,6 @@ class Stat:
         self.image_path = f'{assets_path}\\coin.png'
         self.image = None
         self.load_image()
-        self.starting_position = (0, 0)
         self.player = player
         self.text = None
         self.image_position = (0, 50)
@@ -83,9 +97,9 @@ class Stat:
 
     def draw(self, surface):
         self.update()
-        surface.blit(self.image, self.image_position)
+        surface.blit(self.image, utils.add_tuples(self.image_position, starting_position))
         text_surface = pygame.font.Font(utils.font, 24).render(self.text, True, (255, 255, 255))
-        surface.blit(text_surface, self.text_position)
+        surface.blit(text_surface, utils.add_tuples(self.text_position, starting_position))
 
 
 class PlayerGold(Stat):

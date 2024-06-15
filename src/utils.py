@@ -17,7 +17,8 @@ def resource_path(relative_path):
     base_path = os.path.abspath("..")
     return os.path.join(base_path, relative_path)
 
-
+def add_tuples(t_a, t_b):
+    return tuple(a + b for a, b in zip(t_a, t_b))
 def read_csv(filename):
     array = []
     with open(filename) as data:
