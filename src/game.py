@@ -26,11 +26,9 @@ class Game:
         # self.world_manager = WorldManager(self)
         self.dungeon_size = 5
         self.room_count = 10
-        self.level = 1
+        self.level = 0
 
-        self.dungeon = generator.generate_dungeon(self.dungeon_size, self.room_count)
-
-        self.current_room = self.dungeon[0, 0]
+        self.next_level()
 
         # self.object_manager = ObjectManager(self)
         self.player = Player(self)
@@ -44,6 +42,15 @@ class Game:
         pygame.mixer.init()
         self.dt = 0
         self.screen_position = (0, 0)
+
+    def next_level(self):
+        self.level += 1
+        self.dungeon = generator.generate_dungeon(self.dungeon_size, self.room_count)
+
+        start_x = int(self.dungeon_size / 2)
+        start_y = self.dungeon_size - 1
+        self.current_room = self.dungeon[start_x, start_y]
+        while self.current_room.master: self.current_room = self.dungeon[self.current_room.master]
 
     def refresh(self):
         self.__init__()

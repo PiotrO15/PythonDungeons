@@ -10,7 +10,7 @@ class Player(Entity):
     max_hp = 100
     hp = max_hp
     gold = 0
-    shield = 1
+    shield = 0
     strength = 1
     items = []
 

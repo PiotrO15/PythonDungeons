@@ -111,7 +111,7 @@ class PlayerGold(Stat):
         self.text_position = (25, 55)
 
     def update(self):
-        self.text = f'{self.player.gold}'
+        self.text = f' {self.player.gold}'
 
 
 class PlayerShield(Stat):
@@ -125,7 +125,7 @@ class PlayerShield(Stat):
         self.text_position = (25, 85)
 
     def update(self):
-        self.text = f'x{self.player.shield}'
+        self.text = f' {self.player.shield}'
 
 
 class PlayerAttack(Stat):
@@ -136,10 +136,10 @@ class PlayerAttack(Stat):
         self.image_path = f'{assets_path}\\attack.png'
         self.load_image()
         self.image_position = (0, 110)
-        self.text_position = (25, 110)
+        self.text_position = (25, 115)
 
     def update(self):
-        self.text = f'{round(self.player.strength, 2)}'
+        self.text = f' {round(self.player.strength, 2)}'
 
 
 class Hud:
