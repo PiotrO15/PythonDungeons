@@ -61,6 +61,7 @@ class Room:
         self.master = None
         self.merged_with = []
         self.layout = []
+        self.seed = random.randint(0, 1000000)
 
     def make_empty_layout(self):
         dimensions = [a * b for a, b in zip(self.size, utils.ROOM_DIMENSIONS)]

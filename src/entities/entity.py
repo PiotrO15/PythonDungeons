@@ -49,18 +49,22 @@ class Entity:
         self.hitbox.move_ip(self.velocity)
 
     def wall_collision(self):
-        test_rect = self.hitbox.move(*self.velocity)  # Position after moving, change name later
-        collide_points = (test_rect.midbottom, test_rect.bottomleft, test_rect.bottomright, test_rect.center, test_rect.midleft, test_rect.midright)
+        new_pos_rect = self.hitbox.move(*self.velocity)  # Position after moving, change name later
 
-        #  if any(wall.hitbox.collidepoint(point) for point in collide_points):
-        #         self.velocity = [0, 0]
+        room = self.game.current_room
+        room_size_px = (room.size[0] * utils.ROOM_DIMENSIONS[0] * utils.TILE_SIZE, room.size[1] * utils.ROOM_DIMENSIONS[1] * utils.TILE_SIZE)
+        top_left_corner = [(a - b)/2 for a, b in zip(utils.SCREEN_SIZE, room_size_px)]
 
-        screen_surface = self.game.display
-        try:
-            if any(screen_surface.get_at(point) in [(30, 50, 50)] for point in collide_points):
-                self.velocity = [0, 0]
-                # print('collision')
-        except: self.velocity = [0, 0]
+        # Allow movement if the player touches a door
+        for door in room.doors_rect:
+            if door['rect'].colliderect(new_pos_rect):
+                return
+
+        if (new_pos_rect.left < top_left_corner[0] + utils.TILE_SIZE
+                or new_pos_rect.right > top_left_corner[0] + room.size[0] * utils.ROOM_DIMENSIONS[0] * utils.TILE_SIZE - utils.TILE_SIZE
+                or new_pos_rect.top < top_left_corner[1] + utils.TILE_SIZE
+                or new_pos_rect.bottom > top_left_corner[1] + room.size[1] * utils.ROOM_DIMENSIONS[1] * utils.TILE_SIZE - utils.TILE_SIZE):
+            self.velocity = [0, 0]
 
     def update_hitbox(self):
         self.hitbox = get_mask_rect(self.image, *self.rect.topleft)
