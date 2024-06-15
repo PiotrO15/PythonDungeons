@@ -29,7 +29,7 @@ def load_tile_set():
     for y in range(0, tiles.get_height(), 16):
         row = []
         for x in range(0, tiles.get_width(), 16):
-            tile = pygame.Surface((16, 16))
+            tile = pygame.Surface((16, 16), pygame.SRCALPHA, 32)
             tile.blit(tiles, (0, 0), (x, y, 16, 16))  # Copy the corresponding part of the tile set image
             tile = pygame.transform.scale(tile, (TILE_SIZE, TILE_SIZE))  # Scale the tile
             row.append(tile)
@@ -90,8 +90,8 @@ def draw_room(room: generator.Room, screen):
 
             if tile == 11:
                 room.doors_rect.append({'rect': rect,'destination': room.doors[(y, x)]})
-                # screen.blit(map_tile_set[7][9], rect)
-                screen.blit(choose_rotation((y, x), room, map_tile_set[3][7], map_tile_set[4][7], map_tile_set[3][6], map_tile_set[4][8]), rect)
+                screen.blit(map_tile_set[7][8], rect)
+                screen.blit(choose_rotation((y, x), room, map_tile_set[3][7], map_tile_set[4][7], map_tile_set[3][6], map_tile_set[4][8]).convert_alpha(), rect)
 
             if tile == 1:
                 up = map_tile_set[0][random.randint(1, 4)]
