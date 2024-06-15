@@ -3,23 +3,7 @@ import generator
 import random
 
 from src import utils
-
-TILE_SIZE = utils.TILE_SIZE
-
-# Define colors
-background_color = (20, 0, 10)
-unknown_color = (255, 0, 255)
-# nice_red = (210, 70, 70)
-
-colors_dict = {
-    0:(100, 160, 160),  # floor
-    1:(30, 50, 50),     # wall
-    11:(255, 0, 0),     # door
-    12:(0, 255, 0),     # G
-    13:(255, 255, 0),   # Y
-    14:(0,0,255),       # B
-    100:(255, 140, 80)  # test
-}
+from src.utils import TILE_SIZE
 
 
 def load_tile_set():
@@ -50,27 +34,23 @@ def choose_rotation(position, room, up, right, down, left, corners=None):
     is_down = (position[0] == (room.size[1] * utils.ROOM_DIMENSIONS[1] - 1))
     is_left = (position[1] == 0)
 
+    rotation_map = {
+        (True, False, False, False): up,  # Up
+        (False, True, False, False): right,  # Right
+        (False, False, True, False): down,  # Down
+        (False, False, False, True): left,  # Left
+    }
+
     if corners:
-        if is_up and is_left:
-            return corners[0]
-        if is_up and is_right:
-            return corners[1]
-        if is_down and is_left:
-            return corners[2]
-        if is_down and is_right:
-            return corners[3]
+        corner_map = {
+            (True, False, False, True): corners[0],  # Upper Left
+            (True, True, False, False): corners[1],  # Upper Right
+            (False, False, True, True): corners[2],  # Bottom Left
+            (False, True, True, False): corners[3],  # Bottom Right
+        }
+        rotation_map.update(corner_map)
 
-    if is_up:
-        return up
-    elif is_right:
-        return right
-    elif is_left:
-        return left
-    elif is_down:
-        return down
-
-    else:
-        return down
+    return rotation_map[(is_up, is_right, is_down, is_left)]
 
 
 def draw_room(room: generator.Room, screen):
@@ -78,7 +58,7 @@ def draw_room(room: generator.Room, screen):
     top_left_corner = [(a - b)/2 for a, b in zip(utils.SCREEN_SIZE, room_size_px)]
 
     # Clear the screen
-    screen.fill(background_color)
+    screen.fill(utils.BACKGROUND_COLOR)
     random.seed(room.seed)
 
     # Draw the dungeon
@@ -86,13 +66,14 @@ def draw_room(room: generator.Room, screen):
         for x, tile in enumerate(row):
             rect = pygame.Rect(top_left_corner[0] + x * TILE_SIZE, top_left_corner[1] + y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
 
-            pygame.draw.rect(screen, colors_dict.get(tile, unknown_color), rect)
+            # Draw floor
+            if tile == 0:
+                # Get random tile set from [0][6] to [2][9]
+                random_tile = map_tile_set[random.randint(0, 2)][random.randint(6, 9)]
 
-            if tile == 11:
-                room.doors_rect.append({'rect': rect,'destination': room.doors[(y, x)]})
-                screen.blit(map_tile_set[7][8], rect)
-                screen.blit(choose_rotation((y, x), room, map_tile_set[3][7], map_tile_set[4][7], map_tile_set[3][6], map_tile_set[4][8]).convert_alpha(), rect)
+                screen.blit(random_tile, (top_left_corner[0] + x * TILE_SIZE, top_left_corner[1] + y * TILE_SIZE))
 
+            # Draw walls
             if tile == 1:
                 up = map_tile_set[0][random.randint(1, 4)]
                 right = map_tile_set[random.randint(1, 3)][5]
@@ -104,12 +85,11 @@ def draw_room(room: generator.Room, screen):
                 bottom_right = map_tile_set[4][5]
                 screen.blit(choose_rotation((y, x), room, up, right, down, left, [upper_left, upper_right, bottom_left, bottom_right]), rect)
 
-            if tile == 0:
-                # Get random tile set from [0][6] to [2][9]
-                random_tile = map_tile_set[random.randint(0, 2)][random.randint(6, 9)]
-
-                screen.blit(random_tile, (top_left_corner[0] + x * TILE_SIZE, top_left_corner[1] + y * TILE_SIZE))
-
+            # Draw doors
+            if tile == 11:
+                room.doors_rect.append({'rect': rect, 'destination': room.doors[(y, x)]})
+                screen.blit(map_tile_set[7][8], rect)
+                screen.blit(choose_rotation((y, x), room, map_tile_set[3][7], map_tile_set[4][7], map_tile_set[3][6], map_tile_set[4][8]).convert_alpha(), rect)
 
     # Update the display
     pygame.display.flip()

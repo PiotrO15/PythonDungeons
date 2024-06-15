@@ -7,6 +7,7 @@ SCREEN_SIZE = (1600, 1000)
 TILE_SIZE = 32
 ROOM_DIMENSIONS = (13, 9) # (y, x)
 BLACK = (0, 0, 0)
+BACKGROUND_COLOR = (37, 19, 26)
 WHITE = (255, 255, 255)
 basic_entity_size = (30, 30)
 font = '../assets/Minecraft.ttf'
