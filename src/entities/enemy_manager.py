@@ -1,4 +1,3 @@
-import pygame
 import random
 
 from src.entities.enemy import Enemy, EnemyT1

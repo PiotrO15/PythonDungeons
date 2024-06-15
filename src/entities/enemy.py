@@ -11,7 +11,7 @@ def draw_health_bar(surface, pos, size, hp_percentage):
 
     # color based on hp percentage
     bar_c = (117, 178, 56)
-    if hp_percentage < 0.5 :
+    if hp_percentage < 0.5:
         bar_c = (217, 178, 56)
         if hp_percentage < 0.25:
             bar_c = (217, 78, 56)
@@ -51,8 +51,8 @@ class Enemy(Entity):
                         self.room.size[1] * utils.ROOM_DIMENSIONS[1] * utils.TILE_SIZE)
         top_left_corner = [(a - b) / 2 for a, b in zip(utils.SCREEN_SIZE, room_size_px)]
 
-        self.rect.x = top_left_corner[0] + random.randint(100,  room_size_px[0] - 100)
-        self.rect.y = top_left_corner[1] + random.randint(100,  room_size_px[1] - 100)
+        self.rect.x = top_left_corner[0] + random.randint(100, room_size_px[0] - 100)
+        self.rect.y = top_left_corner[1] + random.randint(100, room_size_px[1] - 100)
 
     def can_attack(self):
         if time_passed(self.attack_cooldown, 1000):
@@ -138,14 +138,13 @@ class Enemy(Entity):
 
             self.destination_position = pick
 
-
     def draw_health(self, surf):
         if self.hp < self.max_hp:
             health_rect = pygame.Rect(0, 0, 30, 8)
             health_rect.midbottom = self.rect.centerx, self.rect.top
             health_rect.midbottom = self.rect.centerx, self.rect.top
 
-            draw_health_bar(surf, health_rect.topleft, health_rect.size, self.hp/self.max_hp)
+            draw_health_bar(surf, health_rect.topleft, health_rect.size, self.hp / self.max_hp)
 
     def draw(self):
         if self.dead:

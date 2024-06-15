@@ -5,7 +5,7 @@ from math import ceil
 assets_path = '..\\assets\\hud'
 
 starting_position = (15, 10)
-
+screen_center = (utils.SCREEN_SIZE[0] / 2, utils.SCREEN_SIZE[1] / 2)
 
 class HealthBar:
     hp_per_cell = 10
@@ -89,8 +89,7 @@ class Stat:
         self.text_position = (25, 55)
 
     def load_image(self):
-        self.image = pygame.transform.scale(pygame.image.load(self.image_path).convert_alpha(),
-                                            self.image_size)
+        self.image = pygame.transform.scale(pygame.image.load(self.image_path).convert_alpha(), self.image_size)
 
     def update(self):
         pass
@@ -141,6 +140,35 @@ class PlayerAttack(Stat):
     def update(self):
         self.text = f' {round(self.player.strength, 2)}'
 
+class GameOver:
+    def __init__(self, game):
+        self.game = game
+        self.text = 'GAME OVER'
+        self.position = screen_center
+        self.played = False
+
+    @staticmethod
+    def input():
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+    def update(self):
+        if self.game.player.dead:
+            self.input()
+
+    def draw(self, surface):
+        if self.game.player.dead:
+            # darken background
+            s = pygame.Surface(utils.SCREEN_SIZE)
+            s.set_alpha(128)
+            s.fill((0, 0, 0))
+            surface.blit(s, (0, 0))
+
+            text_surface = pygame.font.Font(utils.font, 60).render('GAME OVER', True, (255, 255, 255))
+            text_rect = text_surface.get_rect(center=screen_center)
+            surface.blit(text_surface, text_rect)
+
 
 class Hud:
     def __init__(self, game):
@@ -150,18 +178,23 @@ class Hud:
         self.gold = PlayerGold(self.game.player)
         self.shield = PlayerShield(self.game.player)
         self.attack = PlayerAttack(self.game.player)
-        self.health_bar = HealthBar(self.game.player, self.game)
+        self.health_bar = HealthBar(self.game.player, game)
+
+        self.game_over = GameOver(game)
 
     def draw_info(self):
         text_level = f'LEVEL: {int(self.game.level)}'
         level_surface = pygame.font.Font(utils.font, 20).render(text_level, True, (255, 255, 255))
-        self.game.screen.blit(level_surface, (utils.SCREEN_SIZE[0] / 2 - 30, 10))
+        level_rect = level_surface.get_rect(center=(utils.SCREEN_SIZE[0] / 2, 20))
+        self.game.screen.blit(level_surface, level_rect)
 
         self.health_bar.draw()
-        self.gold.draw(self.game.screen)
 
+        self.gold.draw(self.game.screen)
         self.shield.draw(self.game.screen)
         self.attack.draw(self.game.screen)
+
+        self.game_over.draw(self.game.screen)
 
     def draw(self):
         self.draw_info()

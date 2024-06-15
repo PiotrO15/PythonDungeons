@@ -11,7 +11,7 @@ BACKGROUND_COLOR = (37, 19, 26)
 WHITE = (255, 255, 255)
 basic_entity_size = (30, 30)
 font = '../assets/Minecraft.ttf'
-map_center = []
+
 def resource_path(relative_path):
     base_path = os.path.abspath("..")
     return os.path.join(base_path, relative_path)
