@@ -5,7 +5,7 @@ from src import utils
 from src.map import display_map
 from src.entities.enemy_manager import EnemyManager
 from src.entities.player import Player
-# from .menu import MainMenu
+from .menu import MainMenu
 # from .mini_map import MiniMap
 from .hud import Hud
 # from .objects.object_manager import ObjectManager
@@ -16,6 +16,9 @@ pygame.mixer.init()
 
 
 class Game:
+    dungeon_size = 5
+    room_count = 10
+    level = 0
     def __init__(self):
         self.dungeon = None
         self.current_room = None
@@ -23,9 +26,6 @@ class Game:
         self.screen = pygame.Surface(utils.SCREEN_SIZE).convert()
         self.clock = pygame.time.Clock()
         self.enemy_manager = EnemyManager(self)
-        self.dungeon_size = 5
-        self.room_count = 10
-        self.level = 0
 
         self.next_level()
 
@@ -33,7 +33,7 @@ class Game:
         self.player = Player(self)
         self.hud = Hud(self)
         self.running = True
-        # self.menu = MainMenu(self)
+        self.menu = MainMenu(self)
         # self.mini_map = MiniMap(self)
         self.game_time = None
         self.fps = 60
@@ -80,8 +80,10 @@ class Game:
         pressed = pygame.key.get_pressed()
 
         if pressed[pygame.K_ESCAPE]:
-            pass
-            # TODO menu + pause
+            print('menu')
+            self.menu.running = True
+            #self.running = False
+            #self.menu.show()
 
     def debug(self):
         if pygame.mouse.get_pressed()[2]: # spawn enemies under cursor
@@ -104,11 +106,12 @@ class Game:
             now = time.time()
             self.dt = now - prev_time
             prev_time = now
-            # self.menu.show()
 
-            self.debug()
+            self.menu.show()
 
             self.input()
+            self.debug()
+
             self.update_groups()
             self.draw_groups()
             self.game_time = pygame.time.get_ticks()

@@ -5,7 +5,6 @@ from math import ceil
 assets_path = '..\\assets\\hud'
 
 starting_position = (15, 10)
-screen_center = (utils.SCREEN_SIZE[0] / 2, utils.SCREEN_SIZE[1] / 2)
 
 class HealthBar:
     hp_per_cell = 10
@@ -144,7 +143,7 @@ class GameOver:
     def __init__(self, game):
         self.game = game
         self.text = 'GAME OVER'
-        self.position = screen_center
+        self.position = utils.SCREEN_CENTER
         self.played = False
 
     @staticmethod
@@ -166,7 +165,7 @@ class GameOver:
             surface.blit(s, (0, 0))
 
             text_surface = pygame.font.Font(utils.font, 60).render('GAME OVER', True, (255, 255, 255))
-            text_rect = text_surface.get_rect(center=screen_center)
+            text_rect = text_surface.get_rect(center=utils.SCREEN_CENTER)
             surface.blit(text_surface, text_rect)
 
 

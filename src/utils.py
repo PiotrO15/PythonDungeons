@@ -3,6 +3,7 @@ import os
 import pygame
 
 SCREEN_SIZE = (1600, 1000)
+SCREEN_CENTER = (SCREEN_SIZE[0] / 2, SCREEN_SIZE[1] / 2)
 
 TILE_SIZE = 32
 ROOM_DIMENSIONS = (13, 9) # (y, x)
