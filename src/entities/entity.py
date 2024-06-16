@@ -27,7 +27,12 @@ class Entity:
 
     def __str__(self):
         return f'{id(self)}, {self.name}'
+    def update_hitbox(self):
+        self.hitbox = get_mask_rect(self.image, *self.rect.topleft)
+        self.hitbox.midbottom = self.rect.midbottom
 
+    def moving(self):
+        return self.velocity[0] != 0 or self.velocity[1] != 0
     def set_velocity(self, new_velocity):
         self.velocity = new_velocity
 
@@ -66,9 +71,3 @@ class Entity:
                 or new_pos_rect.bottom > top_left_corner[1] + room.size[1] * utils.ROOM_DIMENSIONS[1] * utils.TILE_SIZE - utils.TILE_SIZE):
             self.velocity = [0, 0]
 
-    def update_hitbox(self):
-        self.hitbox = get_mask_rect(self.image, *self.rect.topleft)
-        self.hitbox.midbottom = self.rect.midbottom
-
-    def moving(self):
-        return self.velocity[0] != 0 or self.velocity[1] != 0

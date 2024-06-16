@@ -1,7 +1,7 @@
 import pygame
 
 from src.map import display_map, generator
-# from .objects.object_manager import ObjectManager
+from .items.item_manager import ItemManager
 from src.entities.enemy_manager import EnemyManager
 from src.entities.enemy import EnemyT1 # for debug
 from src.entities.player import Player
@@ -30,7 +30,7 @@ class Game:
 
         self.player = Player(self)
         self.enemy_manager = EnemyManager(self)
-        # self.object_manager = ObjectManager(self)
+        self.item_manager = ItemManager(self)
 
         self.next_level()
 
@@ -49,6 +49,7 @@ class Game:
         self.level += 1
         self.dungeon = generator.generate_dungeon(self.dungeon_size, self.room_count)
 
+        # add enemies in all rooms except first
         self.enemy_manager.add_enemies()
 
         start_x = int(self.dungeon_size / 2)
@@ -58,6 +59,9 @@ class Game:
 
         self.current_room.enemy_list.clear()
 
+        # add items
+        self.item_manager.add_items()
+
     def refresh(self):
         self.__init__()
         pygame.display.flip()
@@ -65,7 +69,7 @@ class Game:
 
     def update_groups(self):
         self.enemy_manager.update_enemies()
-        # self.object_manager.update()
+        self.item_manager.update_items()
         self.player.update()
         # self.mini_map.update()
 
@@ -76,7 +80,7 @@ class Game:
             self.player.draw(self.screen)
 
         self.enemy_manager.draw_enemies(self.screen)
-        #self.object_manager.draw_objects()
+        self.item_manager.draw_items()
 
         # self.mini_map.draw(self.screen)
         self.hud.draw()
@@ -105,7 +109,6 @@ class Game:
 
         # Hurt enemies in the room
         if pygame.mouse.get_pressed()[0]:
-            x, y = pygame.mouse.get_pos()
             for enemy in self.current_room.enemy_list:
                 enemy.hp -= 4
 

@@ -35,6 +35,31 @@ class Enemy(Entity):
 
         self.destination_position = None
 
+    def spawn(self):
+        room_size_px = (self.room.size[0] * utils.ROOM_DIMENSIONS[0] * utils.TILE_SIZE,
+                        self.room.size[1] * utils.ROOM_DIMENSIONS[1] * utils.TILE_SIZE)
+        top_left_corner = [(a - b) / 2 for a, b in zip(utils.SCREEN_SIZE, room_size_px)]
+
+        self.rect.x = top_left_corner[0] + random.randint(100, room_size_px[0] - 100)
+        self.rect.y = top_left_corner[1] + random.randint(100, room_size_px[1] - 100)
+
+    def update(self):
+        self.basic_update()
+        if not self.dead and not self.game.paused:
+            self.change_speed()
+            self.wall_collision()
+            self.move()
+            self.attack_player(self.game.player)
+
+    def can_attack(self):
+        if time_passed(self.attack_cooldown, 1000):
+            self.attack_cooldown = pygame.time.get_ticks()
+            return True
+
+    def attack_player(self, player):
+        if self.hitbox.colliderect(player.hitbox) and self.can_attack():
+            player.calculate_collision(self)
+
     def generate_drops(self):
         pass
         # for _ in range(random.randint(5, 10)):
@@ -46,32 +71,7 @@ class Enemy(Entity):
         self.game.player.gold += random.randint(5, 10)
         # self.generate_drops()
 
-    def spawn(self):
-        room_size_px = (self.room.size[0] * utils.ROOM_DIMENSIONS[0] * utils.TILE_SIZE,
-                        self.room.size[1] * utils.ROOM_DIMENSIONS[1] * utils.TILE_SIZE)
-        top_left_corner = [(a - b) / 2 for a, b in zip(utils.SCREEN_SIZE, room_size_px)]
-
-        self.rect.x = top_left_corner[0] + random.randint(100, room_size_px[0] - 100)
-        self.rect.y = top_left_corner[1] + random.randint(100, room_size_px[1] - 100)
-
-    def can_attack(self):
-        if time_passed(self.attack_cooldown, 1000):
-            self.attack_cooldown = pygame.time.get_ticks()
-            return True
-
-    def attack_player(self, player):
-        if self.hitbox.colliderect(player.hitbox) and self.can_attack():
-            player.calculate_collision(self)
-
-    def update(self):
-        self.basic_update()
-        if not self.dead and not self.game.paused:
-            self.change_speed()
-            self.wall_collision()
-            self.move()
-            self.attack_player(self.game.player)
-
-    def change_speed(self):  # changes speed every 1.5s
+    def change_speed(self):
         if time_passed(self.move_time, 100):
             self.move_time = pygame.time.get_ticks()
             self.speed = random.randint(150, 250)
