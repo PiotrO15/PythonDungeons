@@ -65,7 +65,7 @@ class Enemy(Entity):
 
     def update(self):
         self.basic_update()
-        if not self.dead:
+        if not self.dead and not self.game.paused:
             self.change_speed()
             self.wall_collision()
             self.move()

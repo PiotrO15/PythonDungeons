@@ -35,14 +35,14 @@ class Game:
         self.next_level()
 
         self.running = True
+        self.paused = True
+
         self.hud = Hud(self)
         self.menu = MainMenu(self)
 
         self.clock = pygame.time.Clock()
-        self.game_time = None
         self.fps = 60
         self.dt = 0
-        self.screen_position = (0, 0)
 
     def next_level(self):
         self.level += 1
@@ -52,6 +52,8 @@ class Game:
         start_y = self.dungeon_size - 1
         self.current_room = self.dungeon[start_x, start_y]
         while self.current_room.master: self.current_room = self.dungeon[self.current_room.master]
+
+        # self.current_room.enemy_list = []
 
     def refresh(self):
         self.__init__()
@@ -81,14 +83,13 @@ class Game:
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-        self.player.input()
-        pressed = pygame.key.get_pressed()
+        if not self.paused:
+            self.player.input()
+            pressed = pygame.key.get_pressed()
 
-        if pressed[pygame.K_ESCAPE]:
-            print('menu')
-            self.menu.running = True
-            #self.running = False
-            #self.menu.show()
+            if pressed[pygame.K_ESCAPE]:
+                self.menu.running = True
+                self.paused = True
 
     def debug(self):
         # Spawn enemies under cursor
@@ -108,22 +109,23 @@ class Game:
         self.enemy_manager.add_enemies()
         prev_time = time.time()
         while self.running:
-            self.clock.tick(self.fps)
-            now = time.time()
-            self.dt = now - prev_time
-            prev_time = now
-
-            self.menu.show()
-
             self.input()
-            self.debug()
 
-            self.update_groups()
-            self.draw_groups()
-            self.game_time = pygame.time.get_ticks()
-            self.display.blit(self.screen, self.screen_position)
+            if not self.paused:
+                self.clock.tick(self.fps)
+                now = time.time()
+                self.dt = now - prev_time
+                prev_time = now
 
-            if self.running:
-                pygame.display.flip()
+                self.debug()
 
+                self.update_groups()
+                self.draw_groups()
+
+                self.display.blit(self.screen, (0,0))
+            else:
+                self.menu.show()
+            pygame.display.flip()
+
+        # game_time = pygame.time.get_ticks()
         pygame.quit()

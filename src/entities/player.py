@@ -42,12 +42,15 @@ class Player(Entity):
 
     def update(self) -> None:
         if self.dead:
+            self.game.paused = True
             return
+
         self.wall_collision()
         if self.can_move:
             self.rect.move_ip(*self.velocity)
             self.hitbox.move_ip(*self.velocity)
         self.use_door()
+
         self.detect_death()
 
         self.update_hitbox()
@@ -56,12 +59,9 @@ class Player(Entity):
         self.rect = self.image.get_rect(center=(self.game.display.get_width() / 2, self.game.display.get_height() / 2))
 
     def use_door(self):
-        screen_surface = self.game.display
-
         for entry in self.game.current_room.doors:
             if entry.rect.collidepoint(self.hitbox.midbottom):
                 previous_room_position = self.game.current_room.position
-                previous_room_size = self.game.current_room.size
 
                 # Change room
                 self.game.current_room = self.game.dungeon[entry.destination]

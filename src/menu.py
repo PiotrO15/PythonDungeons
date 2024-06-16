@@ -35,7 +35,7 @@ class PlayButton(Button):
     def detect_action(self, pos):
         if self.text_rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] == 1:
             self.menu.running = False
-            self.menu.game.running = True
+            self.menu.game.paused = False
 
 
 class ExitButton(Button):
@@ -71,8 +71,9 @@ class MainMenu:
             if event.type == pygame.QUIT:
                 pygame.quit()
         pressed = pygame.key.get_pressed()
-        if pressed[pygame.K_ESCAPE]:
-            self.game.running = False
+        # if pressed[pygame.K_ESCAPE]:
+        #     self.running = False
+        #     self.game.pause = False
 
     def update(self):
         self.play_button.update()
@@ -83,6 +84,7 @@ class MainMenu:
         s = pygame.Surface(utils.SCREEN_SIZE)
         s.set_alpha(128)
         s.fill((0, 0, 0))
+
         self.game.screen.blit(s, (0, 0))
 
         # Draw buttons
@@ -94,7 +96,6 @@ class MainMenu:
             self.input()
             self.update()
             self.draw()
-            self.play_button.detect_action(pygame.mouse.get_pos())
-            self.game.clock.tick(self.game.fps)
+            # self.game.clock.tick(self.game.fps)
             self.game.display.blit(self.game.screen, (0, 0))
             pygame.display.flip()
