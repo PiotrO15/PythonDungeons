@@ -47,12 +47,14 @@ class Game:
         self.level += 1
         self.dungeon = generator.generate_dungeon(self.dungeon_size, self.room_count)
 
+        self.enemy_manager.add_enemies()
+
         start_x = int(self.dungeon_size / 2)
         start_y = self.dungeon_size - 1
         self.current_room = self.dungeon[start_x, start_y]
         while self.current_room.master: self.current_room = self.dungeon[self.current_room.master]
 
-        # self.current_room.enemy_list = []
+        self.current_room.enemy_list.clear()
 
     def refresh(self):
         self.__init__()
@@ -105,17 +107,19 @@ class Game:
                 enemy.hp -= 4
 
     def run_game(self):
-        self.enemy_manager.add_enemies()
         prev_time = time.time()
+
         while self.running:
             self.input()
 
-            if not self.paused:
-                self.clock.tick(self.fps)
-                now = time.time()
-                self.dt = now - prev_time
-                prev_time = now
+            self.clock.tick(self.fps)
+            now = time.time()
+            self.dt = now - prev_time
+            prev_time = now
 
+            if self.player.dead:
+                ...
+            elif not self.paused:
                 self.debug()
 
                 self.update_groups()
