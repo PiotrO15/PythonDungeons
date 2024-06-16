@@ -1,7 +1,7 @@
-
 import pygame
 
 from src import utils
+
 
 class Button:
 
@@ -16,15 +16,13 @@ class Button:
         pass
 
     def update(self):
-        pos = pygame.mouse.get_pos()
-        if self.text_rect.collidepoint(pos):
-            #self.text_rect.color = (200, 200, 200)
-            pass
-        else:
-            #self.text_rect.color = (255, 255, 255)
-            pass
-        self.detect_action(pos)
-
+        mouse = pygame.mouse.get_pos()
+        # change button color on hover?
+        # if self.text_rect.collidepoint(mouse):
+        #     self.text_rect.color = (200, 200, 200)
+        # else:
+        #     self.text_rect.color = (255, 255, 255)
+        self.detect_action(mouse)
 
     def draw(self, surface):
         surface.blit(self.text_surface, self.text_rect)
@@ -50,16 +48,23 @@ class ExitButton(Button):
             self.menu.running = False
 
 
+class Logo:
+    def __init__(self, game):
+        self.logo = pygame.image.load('./assets/misc/logo.png').convert_alpha()
+        self.logo = pygame.transform.scale(self.logo, (400, 250))
+        self.logo_rect = self.logo.get_rect()
+        self.logo_rect.midtop = (utils.SCREEN_CENTER[0], 50)
+
+    def draw(self, surface):
+        surface.blit(self.logo, self.logo_rect)
+
+
 class MainMenu:
     def __init__(self, game):
         self.game = game
         self.running = True
         self.play_button = PlayButton(self, 300)
-        self.exit_button = ExitButton(self,450)
-        # self.logo = pygame.image.load('./assets/misc/logo.png').convert_alpha()
-        # self.logo = pygame.transform.scale(self.logo, (400, 250))
-        # self.logo_rect = self.logo.get_rect()
-        # self.logo_rect.midtop = (utils.SCREEN_CENTER[0], 50)
+        self.exit_button = ExitButton(self, 450)
 
     def input(self):
         for event in pygame.event.get():
@@ -74,15 +79,15 @@ class MainMenu:
         self.exit_button.update()
 
     def draw(self):
+        # Darken background
         s = pygame.Surface(utils.SCREEN_SIZE)
         s.set_alpha(128)
         s.fill((0, 0, 0))
         self.game.screen.blit(s, (0, 0))
 
+        # Draw buttons
         self.play_button.draw(self.game.screen)
         self.exit_button.draw(self.game.screen)
-
-        #self.game.screen.blit(self.logo, self.logo_rect)
 
     def show(self):
         while self.running:

@@ -1,19 +1,20 @@
 import pygame
 
 import generator
-from src import utils
 from src.map import display_map
+# from .objects.object_manager import ObjectManager
 from src.entities.enemy_manager import EnemyManager
+from src.entities.enemy import EnemyT1 # for debug
 from src.entities.player import Player
 from .menu import MainMenu
 # from .mini_map import MiniMap
 from .hud import Hud
-# from .objects.object_manager import ObjectManager
+from src import utils
+
 import time
 
 pygame.init()
 pygame.mixer.init()
-
 
 class Game:
     dungeon_size = 5
@@ -42,7 +43,6 @@ class Game:
         self.fps = 60
         self.dt = 0
         self.screen_position = (0, 0)
-        pygame.mixer.init()
 
     def next_level(self):
         self.level += 1
@@ -91,16 +91,17 @@ class Game:
             #self.menu.show()
 
     def debug(self):
-        if pygame.mouse.get_pressed()[2]: # spawn enemies under cursor
+        # Spawn enemies under cursor
+        if pygame.mouse.get_pressed()[2]:
             x, y = pygame.mouse.get_pos()
-            from src.entities.enemy import EnemyT1
-            self.current_room.enemy_list.append(EnemyT1(self, 200, self.current_room))
-            #print('spawned enemy')
+
+            self.current_room.enemy_list.append(EnemyT1(self, 150, self.current_room))
             self.current_room.enemy_list[-1].rect.topleft = (x, y)
-        if pygame.mouse.get_pressed()[0]: # hurt enemies in the room
+
+        # Hurt enemies in the room
+        if pygame.mouse.get_pressed()[0]:
             x, y = pygame.mouse.get_pos()
             for enemy in self.current_room.enemy_list:
-                #print('hurt enemies')
                 enemy.hp -= 4
 
     def run_game(self):
