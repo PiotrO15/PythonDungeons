@@ -45,11 +45,11 @@ class Neighbor:
         self.direction = direction
 
 class Door:
-    def __init__(self, room, position, direction):
+    def __init__(self, room, neighbor):
         self.room = room
-        self.position = position
-        self.direction = direction
-        self.destination = utils.add_tuples(position, direction_dict[direction])
+        self.position = neighbor.position
+        self.direction = neighbor.direction
+        self.destination = utils.add_tuples(neighbor.position, direction_dict[neighbor.direction])
         self.coords = self.coords_in_room()
         self.rect = self.make_rect()
 
@@ -111,7 +111,7 @@ class Room:
 
     def add_doors(self):
         for neighbor in self.neighbors:
-            door = Door(self, neighbor.position, neighbor.direction)
+            door = Door(self, neighbor)
             self.doors.append(door)
 
     def merge_with(self, room, direction):

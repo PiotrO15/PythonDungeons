@@ -20,26 +20,29 @@ class Game:
     room_count = 10
     level = 0
     def __init__(self):
-        self.dungeon = None
-        self.current_room = None
         self.display = pygame.display.set_mode(utils.SCREEN_SIZE)
         self.screen = pygame.Surface(utils.SCREEN_SIZE).convert()
-        self.clock = pygame.time.Clock()
+
+        self.dungeon = None
+        self.current_room = None
+        # self.mini_map = MiniMap(self)
+
+        self.player = Player(self)
         self.enemy_manager = EnemyManager(self)
+        # self.object_manager = ObjectManager(self)
 
         self.next_level()
 
-        # self.object_manager = ObjectManager(self)
-        self.player = Player(self)
-        self.hud = Hud(self)
         self.running = True
+        self.hud = Hud(self)
         self.menu = MainMenu(self)
-        # self.mini_map = MiniMap(self)
+
+        self.clock = pygame.time.Clock()
         self.game_time = None
         self.fps = 60
-        pygame.mixer.init()
         self.dt = 0
         self.screen_position = (0, 0)
+        pygame.mixer.init()
 
     def next_level(self):
         self.level += 1
@@ -66,9 +69,11 @@ class Game:
 
         if self.player:
             self.player.draw(self.screen)
+
         self.enemy_manager.draw_enemies(self.screen)
         #self.object_manager.draw_objects()
-        #self.mini_map.draw(self.screen)
+
+        # self.mini_map.draw(self.screen)
         self.hud.draw()
 
     def input(self):
