@@ -139,35 +139,6 @@ class PlayerAttack(Stat):
     def update(self):
         self.text = f' {round(self.player.strength, 2)}'
 
-class GameOver:
-    def __init__(self, game):
-        self.game = game
-        self.text = 'GAME OVER'
-        self.position = utils.SCREEN_CENTER
-        self.played = False
-
-    @staticmethod
-    def input():
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-
-    def update(self):
-        if self.game.player.dead:
-            self.input()
-
-    def draw(self, surface):
-        if self.game.player.dead:
-            # darken background
-            s = pygame.Surface(utils.SCREEN_SIZE)
-            s.set_alpha(128)
-            s.fill((0, 0, 0))
-            surface.blit(s, (0, 0))
-
-            text_surface = pygame.font.Font(utils.font, 60).render('GAME OVER', True, (255, 255, 255))
-            text_rect = text_surface.get_rect(center=utils.SCREEN_CENTER)
-            surface.blit(text_surface, text_rect)
-
 
 class Hud:
     def __init__(self, game):
@@ -178,8 +149,6 @@ class Hud:
         self.shield = PlayerShield(self.game.player)
         self.attack = PlayerAttack(self.game.player)
         self.health_bar = HealthBar(self.game.player, game)
-
-        self.game_over = GameOver(game)
 
     def draw_info(self):
         text_level = f'LEVEL: {int(self.game.level)}'
@@ -192,8 +161,6 @@ class Hud:
         self.gold.draw(self.game.screen)
         self.shield.draw(self.game.screen)
         self.attack.draw(self.game.screen)
-
-        self.game_over.draw(self.game.screen)
 
     def draw(self):
         self.draw_info()

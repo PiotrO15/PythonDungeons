@@ -5,12 +5,12 @@ from src import utils
 
 class Button:
 
-    def __init__(self, menu, y: int, text: str):
+    def __init__(self, menu, x, y: int, text: str, fontsize: int):
         self.menu = menu
         self.text = text
-        font = pygame.font.Font(utils.font, 60)
+        font = pygame.font.Font(utils.font, fontsize)
         self.text_surface = font.render(self.text, True, (255, 255, 255))
-        self.text_rect = self.text_surface.get_rect(midtop=(utils.SCREEN_CENTER[0], y))
+        self.text_rect = self.text_surface.get_rect(midtop=(x, y))
 
     def detect_action(self, pos):
         pass
@@ -30,7 +30,7 @@ class Button:
 
 class PlayButton(Button):
     def __init__(self, menu, y):
-        super().__init__(menu, y, 'play')
+        super().__init__(menu, utils.SCREEN_CENTER[0], y, 'PLAY', 60)
 
     def detect_action(self, pos):
         if self.text_rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] == 1:
@@ -40,7 +40,7 @@ class PlayButton(Button):
 
 class ExitButton(Button):
     def __init__(self, menu, y):
-        super().__init__(menu, y, 'exit')
+        super().__init__(menu, utils.SCREEN_CENTER[0], y, 'EXIT', 60)
 
     def detect_action(self, pos):
         if self.text_rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] == 1:

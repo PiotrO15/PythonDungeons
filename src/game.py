@@ -8,6 +8,7 @@ from src.entities.player import Player
 from .menu import MainMenu
 # from .mini_map import MiniMap
 from .hud import Hud
+from .game_over import GameOver
 from src import utils
 
 import time
@@ -38,6 +39,7 @@ class Game:
 
         self.hud = Hud(self)
         self.menu = MainMenu(self)
+        self.game_over = GameOver(self)
 
         self.clock = pygame.time.Clock()
         self.fps = 60
@@ -78,6 +80,7 @@ class Game:
 
         # self.mini_map.draw(self.screen)
         self.hud.draw()
+        self.game_over.draw()
 
     def input(self):
         for event in pygame.event.get():
