@@ -5,10 +5,10 @@ from src.map import display_map, generator
 from src.entities.enemy_manager import EnemyManager
 from src.entities.enemy import EnemyT1 # for debug
 from src.entities.player import Player
-from .menu import MainMenu
+from src.ui.menu import MainMenu
 # from .mini_map import MiniMap
-from .hud import Hud
-from .game_over import GameOver
+from src.ui.hud import Hud
+from src.ui.game_over import GameOver
 from src import utils
 
 import time
@@ -121,7 +121,7 @@ class Game:
             prev_time = now
 
             if self.player.dead:
-                ...
+                self.game_over.show()
             elif not self.paused:
                 self.debug()
 

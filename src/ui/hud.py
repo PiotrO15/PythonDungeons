@@ -2,7 +2,7 @@ import pygame
 import src.utils as utils
 from math import ceil
 
-assets_path = '..\\assets\\hud'
+assets_path = '../assets/hud'
 
 starting_position = (15, 10)
 
