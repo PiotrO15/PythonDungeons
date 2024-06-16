@@ -1,7 +1,6 @@
 import pygame
 
-import generator
-from src.map import display_map
+from src.map import display_map, generator
 # from .objects.object_manager import ObjectManager
 from src.entities.enemy_manager import EnemyManager
 from src.entities.enemy import EnemyT1 # for debug

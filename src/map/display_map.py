@@ -1,5 +1,5 @@
 import pygame
-import generator
+from src.map import generator
 import random
 
 from src import utils
