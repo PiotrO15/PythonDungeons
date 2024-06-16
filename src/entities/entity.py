@@ -56,8 +56,8 @@ class Entity:
         top_left_corner = [(a - b)/2 for a, b in zip(utils.SCREEN_SIZE, room_size_px)]
 
         # Allow movement if the player touches a door
-        for door in room.doors_rect:
-            if door['rect'].colliderect(new_pos_rect):
+        for door in room.doors:
+            if door.rect.colliderect(new_pos_rect):
                 return
 
         if (new_pos_rect.left < top_left_corner[0] + utils.TILE_SIZE

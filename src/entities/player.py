@@ -58,35 +58,43 @@ class Player(Entity):
     def use_door(self):
         screen_surface = self.game.display
 
-        for entry in self.game.current_room.doors_rect:
-            if entry['rect'].collidepoint(self.hitbox.midbottom):
+        for entry in self.game.current_room.doors:
+            if entry.rect.collidepoint(self.hitbox.midbottom):
                 previous_room_position = self.game.current_room.position
                 previous_room_size = self.game.current_room.size
-                self.game.current_room = self.game.dungeon[entry['destination']]
+
+                # Change room
+                self.game.current_room = self.game.dungeon[entry.destination]
                 while self.game.current_room.master:
                     self.game.current_room = self.game.dungeon[self.game.current_room.master]
 
                 # Find the door that leads to the previous room
-                for door in self.game.current_room.doors.items():
-                    if (previous_room_position[0] <= door[1][0] <= previous_room_position[0] + previous_room_size[0] - 1
-                            and previous_room_position[1] <= door[1][1] <= previous_room_position[1] + previous_room_size[1] - 1):
+                for door in self.game.current_room.doors:
+                    # find destination of the door
+                    destination = door.destination
+                    while self.game.dungeon[destination].master:
+                        destination = self.game.dungeon[destination].master
+
+                    # if the door leads to previous room, appear next to it
+                    if destination == previous_room_position:
                         room = self.game.current_room
                         # Calculate the new player position based on the door position
                         room_size_px = (room.size[0] * utils.ROOM_DIMENSIONS[0] * utils.TILE_SIZE, room.size[1] * utils.ROOM_DIMENSIONS[1] * utils.TILE_SIZE)
                         top_left_corner = [(a - b)/2 for a, b in zip(utils.SCREEN_SIZE, room_size_px)]
+
                         # Add offset so the player stays inside the room
-                        if door[0][0] == 0:
-                            self.rect.x = top_left_corner[0] + door[0][1] * utils.TILE_SIZE
-                            self.rect.y = top_left_corner[1] + (door[0][0] + 1) * utils.TILE_SIZE
-                        elif door[0][0] == (room.size[1] * utils.ROOM_DIMENSIONS[1] - 1):
-                            self.rect.x = top_left_corner[0] + door[0][1] * utils.TILE_SIZE
-                            self.rect.y = top_left_corner[1] + (door[0][0] - 1) * utils.TILE_SIZE
-                        elif door[0][1] == 0:
-                            self.rect.x = top_left_corner[0] + (door[0][1] + 1) * utils.TILE_SIZE
-                            self.rect.y = top_left_corner[1] + door[0][0] * utils.TILE_SIZE
-                        elif door[0][1] == (room.size[0] * utils.ROOM_DIMENSIONS[0] - 1):
-                            self.rect.x = top_left_corner[0] + (door[0][1] - 1) * utils.TILE_SIZE
-                            self.rect.y = top_left_corner[1] + door[0][0] * utils.TILE_SIZE
+                        if door.coords[0] == 0:
+                            self.rect.x = top_left_corner[0] + door.coords[1] * utils.TILE_SIZE
+                            self.rect.y = top_left_corner[1] + (door.coords[0] + 1) * utils.TILE_SIZE
+                        elif door.coords[0] == (room.size[1] * utils.ROOM_DIMENSIONS[1] - 1):
+                            self.rect.x = top_left_corner[0] + door.coords[1] * utils.TILE_SIZE
+                            self.rect.y = top_left_corner[1] + (door.coords[0] - 1) * utils.TILE_SIZE
+                        elif door.coords[1] == 0:
+                            self.rect.x = top_left_corner[0] + (door.coords[1] + 1) * utils.TILE_SIZE
+                            self.rect.y = top_left_corner[1] + door.coords[0] * utils.TILE_SIZE
+                        elif door.coords[1] == (room.size[0] * utils.ROOM_DIMENSIONS[0] - 1):
+                            self.rect.x = top_left_corner[0] + (door.coords[1] - 1) * utils.TILE_SIZE
+                            self.rect.y = top_left_corner[1] + door.coords[0] * utils.TILE_SIZE
                 break
 
     def calculate_collision(self, enemy):

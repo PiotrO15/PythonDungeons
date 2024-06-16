@@ -5,6 +5,9 @@ import random
 from enum import Enum
 import typing
 
+import pygame
+
+from src.utils import TILE_SIZE
 from src import utils
 
 
@@ -41,6 +44,41 @@ class Neighbor:
         self.position = position
         self.direction = direction
 
+class Door:
+    def __init__(self, room, position, direction):
+        self.room = room
+        self.position = position
+        self.direction = direction
+        self.destination = utils.add_tuples(position, direction_dict[direction])
+        self.coords = self.coords_in_room()
+        self.rect = self.make_rect()
+
+    def make_rect(self):
+        room_size_px = (self.room.size[0] * utils.ROOM_DIMENSIONS[0] * TILE_SIZE, self.room.size[1] * utils.ROOM_DIMENSIONS[1] * TILE_SIZE)
+        top_left_corner = [(a - b) / 2 for a, b in zip(utils.SCREEN_SIZE, room_size_px)]
+
+        y, x = self.coords
+        rect = pygame.Rect(top_left_corner[0] + x * TILE_SIZE, top_left_corner[1] + y * TILE_SIZE, TILE_SIZE, TILE_SIZE)
+        return rect
+
+    def coords_in_room(self):
+        door_cords = (0, 0)
+
+        offset_x = self.position[0] - self.room.position[0]
+        offset_y = self.position[1] - self.room.position[1]
+
+        if self.direction == Direction.UP:
+            door_cords = (0, int((offset_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
+        elif self.direction == Direction.DOWN:
+            door_cords = (len(self.room.layout) - 1, int((offset_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
+        elif self.direction == Direction.LEFT:
+            door_cords = (int((offset_y + 0.5) * utils.ROOM_DIMENSIONS[1]), 0)
+        elif self.direction == Direction.RIGHT:
+            door_cords = (int((offset_y + 0.5) * utils.ROOM_DIMENSIONS[1]), len(self.room.layout[0]) - 1)
+
+        #self.room.layout[door_cords[0]][door_cords[1]] = 11
+
+        return door_cords
 
 class Room:
     position: Tuple[int, int]
@@ -53,11 +91,9 @@ class Room:
     def __init__(self, x, y):
         self.position = (x, y)
         self.size = (1, 1)
-
         self.end = False
         self.neighbors = []
-        self.doors = {}
-        self.doors_rect = []
+        self.doors = []
         self.enemy_list = []
         self.master = None
         self.merged_with = []
@@ -74,39 +110,9 @@ class Room:
         return room_layout
 
     def add_doors(self):
-        doors: dict[tuple[int, int], tuple[int, int]] = {}
-
         for neighbor in self.neighbors:
-            door_cords = (0, 0)
-            # destination = neighbor.position
-            destination = [a + b for a, b in zip(neighbor.position, direction_dict[neighbor.direction])]
-
-            offset_x = neighbor.position[0] - self.position[0]
-            offset_y = neighbor.position[1] - self.position[1]
-            # print(offset_x, offset_y)
-
-            if neighbor.direction == Direction.UP:
-                door_cords = (0, int((offset_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
-                # destination[1] -= 1
-            elif neighbor.direction == Direction.DOWN:
-                door_cords = (len(self.layout)-1, int((offset_x + 0.5) * utils.ROOM_DIMENSIONS[0]))
-                # destination[1] += 1
-            elif neighbor.direction == Direction.LEFT:
-                door_cords = (int((offset_y + 0.5) * utils.ROOM_DIMENSIONS[1]), 0)
-                # destination[0] -= 1
-            elif neighbor.direction == Direction.RIGHT:
-                door_cords = (int((offset_y + 0.5) * utils.ROOM_DIMENSIONS[1]), len(self.layout[0])-1)
-                # destination[0] += 1
-
-            # print(door_cords)
-
-            self.layout[door_cords[0]][door_cords[1]] = 11
-
-            doors[door_cords] = (destination[0], destination[1])
-
-        self.doors = doors
-
-        return doors
+            door = Door(self, neighbor.position, neighbor.direction)
+            self.doors.append(door)
 
     def merge_with(self, room, direction):
         self.merged_with.append(room)

@@ -85,11 +85,12 @@ def draw_room(room: generator.Room, screen):
                 bottom_right = map_tile_set[4][5]
                 screen.blit(choose_rotation((y, x), room, up, right, down, left, [upper_left, upper_right, bottom_left, bottom_right]), rect)
 
-            # Draw doors
-            if tile == 11:
-                room.doors_rect.append({'rect': rect, 'destination': room.doors[(y, x)]})
-                screen.blit(map_tile_set[7][8], rect)
-                screen.blit(choose_rotation((y, x), room, map_tile_set[3][7], map_tile_set[4][7], map_tile_set[3][6], map_tile_set[4][8]).convert_alpha(), rect)
+    # Draw doors
+    for door in room.doors:
+        rect = door.rect
+        y, x = door.coords
+        screen.blit(map_tile_set[7][8], rect)
+        screen.blit(choose_rotation((y,x), room, map_tile_set[3][7], map_tile_set[4][7], map_tile_set[3][6], map_tile_set[4][8]).convert_alpha(), rect)
 
     # Update the display
     pygame.display.flip()
