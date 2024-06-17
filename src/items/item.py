@@ -36,7 +36,7 @@ class Item:
 
     def detect_interaction(self):
         pressed = pygame.key.get_pressed()
-        if self.game.player.hitbox.colliderect(self.rect) and pressed[pygame.K_e]:
+        if self.game.player.hitbox.colliderect(self.rect) and pressed[pygame.K_SPACE]:
             self.interaction = True
         else:
             self.interaction = False

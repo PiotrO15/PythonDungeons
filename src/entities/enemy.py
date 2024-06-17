@@ -52,7 +52,7 @@ class Enemy(Entity):
             self.attack_player(self.game.player)
 
     def can_attack(self):
-        if time_passed(self.attack_cooldown, 1000):
+        if time_passed(self.attack_cooldown, 400):
             self.attack_cooldown = pygame.time.get_ticks()
             return True
 
@@ -74,7 +74,7 @@ class Enemy(Entity):
     def change_speed(self):
         if pygame.time.get_ticks() - self.move_time > 100:
             self.move_time = pygame.time.get_ticks()
-            self.speed = self.def_speed + random.randint(-50, 100)
+            self.speed = self.def_speed + random.randint(-75, 75)
             return True
 
     def move(self):
@@ -156,7 +156,7 @@ class Enemy(Entity):
 class EnemyT1(Enemy):
     name = 'e1'
     damage = 13
-    def_speed = 150
+    def_speed = 100
 
     def __init__(self, game, max_hp, room):
         Enemy.__init__(self, game, max_hp, room, self.name)
