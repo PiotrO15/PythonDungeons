@@ -14,10 +14,6 @@ basic_entity_size = (30, 30)
 font = 'assets/Minecraft.ttf'
 stats_path = '../stats.csv'
 
-def resource_path(relative_path):
-    base_path = os.path.abspath("..")
-    return os.path.join(base_path, relative_path)
-
 def add_tuples(t_a, t_b):
     return tuple(a + b for a, b in zip(t_a, t_b))
 
@@ -25,13 +21,6 @@ def time_passed(timer, amount):
     if pygame.time.get_ticks() - timer > amount:
         timer = pygame.time.get_ticks()
         return True
-def read_csv(filename):
-    array = []
-    with open(filename) as data:
-        data = csv.reader(data, delimiter=',')
-        for row in data:
-            array.append(list(row))
-    return array
 
 def get_mask_rect(surf, top=0, left=0):
     """Returns minimal bounding rectangle of an image"""

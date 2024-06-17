@@ -93,13 +93,16 @@ class LeaderBoard:
 
             offset = 150
 
+            i = 1
             # Display leaderboard
-            for index, row in self.df.iterrows():
-                text_surface = pygame.font.Font(utils.font, 24).render(f'{index}. {row['name']} | {row['points']} points', True, (255, 255, 255))
+            for index, row in self.df.head(7).iterrows():
+                text_surface = pygame.font.Font(utils.font, 24).render(f'{i}. {row['name']} | {row['points']} points',
+                                                                       True, (255, 255, 255))
                 text_rect = text_surface.get_rect(midleft=(50, offset))
 
                 self.surf.blit(text_surface, text_rect)
                 offset += 60
+                i += 1
 
             self.game.screen.blit(self.surf, self.rect)
 
