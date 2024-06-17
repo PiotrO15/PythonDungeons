@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "python_dungeons"
+version = "0.1.0"
+description = "A simple dungeon crawler game"
+requires-python = ">=3.9"
+readme = "README.md"
+authors = [
+    {name = "Piotr Bogacki"},
+    {name = "Natalia Dyś"}
+]
+license = {text = "MIT"}
+dependencies = [
+    "numpy",
+    "pygame",
+    "pandas"
+]
+
+[project.optional-dependencies]
+layout_display = ["PySide6"]
+
+[project.gui-scripts]
+start-game = "python_dungeons.main:main"
+display-layout = "python_dungeons.map.display_layout:main"
+
+[tool.poetry]
+name = "python_dungeons"
+version = "0.1.0"
+description = "A simple dungeon crawler game"
+authors = ["Piotr Bogacki", "Natalia Dyś"]
+
+[tool.poetry.scripts]
+start-game = "python_dungeons.main:main"
+display-layout = "python_dungeons.map.display_layout:main"

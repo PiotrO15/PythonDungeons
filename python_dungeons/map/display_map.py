@@ -1,15 +1,15 @@
 import pygame
-from src.map import generator
+from python_dungeons.map import generator
 import random
 
-from src import utils
-from src.utils import TILE_SIZE
+from python_dungeons import utils
+from python_dungeons.utils import TILE_SIZE
 
 
 def load_tile_set():
     # Splits the tile_set into a 2D array of 16x16 tiles and scales them to TILE_SIZE
     tile_set = []
-    tiles = pygame.image.load("..\\assets\\map\\tile_set.png")
+    tiles = pygame.image.load("assets\\map\\tile_set.png")
     for y in range(0, tiles.get_height(), 16):
         row = []
         for x in range(0, tiles.get_width(), 16):

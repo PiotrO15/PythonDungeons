@@ -1,16 +1,16 @@
 import pygame
 import pandas as pd
 
-from src.map import display_map, generator
+from python_dungeons.map import display_map, generator
 from .items.item_manager import ItemManager
-from src.entities.enemy_manager import EnemyManager
-from src.entities.enemy import ReaperSkeleton # for debug
-from src.entities.player import Player
-from src.ui.menu import MainMenu
+from python_dungeons.entities.enemy_manager import EnemyManager
+from python_dungeons.entities.enemy import ReaperSkeleton # for debug
+from python_dungeons.entities.player import Player
+from python_dungeons.ui.menu import MainMenu
 # from .mini_map import MiniMap
-from src.ui.hud import Hud
-from src.ui.game_over import GameOver
-from src import utils
+from python_dungeons.ui.hud import Hud
+from python_dungeons.ui.game_over import GameOver
+from python_dungeons import utils
 
 import time
 

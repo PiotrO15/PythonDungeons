@@ -7,8 +7,8 @@ import typing
 
 import pygame
 
-from src.utils import TILE_SIZE
-from src import utils
+from python_dungeons.utils import TILE_SIZE
+from python_dungeons import utils
 
 
 # Enum for all the directions

@@ -2,8 +2,8 @@ import random
 
 import pygame
 
-from src.utils import get_mask_rect
-from src.utils import TILE_SIZE
+from python_dungeons.utils import get_mask_rect
+from python_dungeons.utils import TILE_SIZE
 
 class Item:
     def __init__(self, game, name, size=None, position=None):
@@ -11,7 +11,7 @@ class Item:
         self.name = name
         self.size = size
         self.image = None
-        self.path = f'..\\assets\\objects\\{self.name}.png'
+        self.path = f'assets\\objects\\{self.name}.png'
         self.load_image()
         self.rect = self.image.get_rect()
         if position:

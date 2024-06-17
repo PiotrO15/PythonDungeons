@@ -1,6 +1,6 @@
 import pygame
-import src.utils as utils
-from src.utils import get_mask_rect
+import python_dungeons.utils as utils
+from python_dungeons.utils import get_mask_rect
 import math
 
 
@@ -13,7 +13,7 @@ class Entity:
         self.hp = self.max_hp
         self.game = game
         self.name = name
-        self.path = f'..\\assets\\entities\\{self.name}'
+        self.path = f'assets\\entities\\{self.name}'
         self.image = []
         for frame in range(frames):
             self.image.append(pygame.transform.scale(pygame.image.load(f'{self.path}\\idle_{frame + 1}.png'),

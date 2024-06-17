@@ -2,9 +2,9 @@ import math
 
 import pygame
 from math import sqrt
-from src.entities.entity import Entity
-from src import utils
-from src.utils import time_passed
+from python_dungeons.entities.entity import Entity
+from python_dungeons import utils
+from python_dungeons.utils import time_passed
 
 
 class Player(Entity):

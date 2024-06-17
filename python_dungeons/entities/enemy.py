@@ -2,7 +2,7 @@ import random
 
 import pygame
 
-from src.utils import time_passed
+from python_dungeons.utils import time_passed
 from .entity import Entity
 from .. import utils
 

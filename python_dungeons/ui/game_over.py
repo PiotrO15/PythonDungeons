@@ -1,6 +1,6 @@
 import pygame
 
-from src import utils
+from python_dungeons import utils
 from .menu import Button
 
 

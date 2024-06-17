@@ -1,6 +1,6 @@
 import random
 
-from src.entities.enemy import ReaperSkeleton, FighterSkeleton
+from python_dungeons.entities.enemy import ReaperSkeleton, FighterSkeleton
 
 
 class EnemyManager:

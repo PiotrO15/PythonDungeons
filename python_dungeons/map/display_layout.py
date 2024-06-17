@@ -1,11 +1,11 @@
 import sys
 
-import generator
 from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QSpinBox, QLabel
 from PySide6.QtGui import QPainter, QColor, QPen, QPixmap
 from PySide6.QtCore import Qt, QRect
 
-from generator import Direction
+from python_dungeons.map import generator
+from python_dungeons.map.generator import Direction
 
 
 class DungeonGenerator(QWidget):

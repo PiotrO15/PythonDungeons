@@ -2,8 +2,8 @@ import random
 
 import pygame
 
-from src.items.item import Item
-from src.utils import TILE_SIZE
+from python_dungeons.items.item import Item
+from python_dungeons.utils import TILE_SIZE
 
 
 class Shield(Item):

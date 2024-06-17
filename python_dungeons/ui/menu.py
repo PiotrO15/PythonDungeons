@@ -1,8 +1,8 @@
 import pygame
 import pandas as pd
 
-from src import utils
-from src.utils import SCREEN_CENTER
+from python_dungeons import utils
+from python_dungeons.utils import SCREEN_CENTER
 
 
 class Button:

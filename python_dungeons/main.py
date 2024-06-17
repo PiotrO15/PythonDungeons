@@ -1,4 +1,4 @@
-from src.game import Game
+from python_dungeons.game import Game
 
 def main():
     game_instance = Game()

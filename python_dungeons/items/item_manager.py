@@ -1,11 +1,11 @@
 import random
 
-from src import utils
-from src.items.chest import Chest
-from src.items.ladder import Ladder
-from src.items.misc_items import Shield, PotionHPSmall, PotionHPLarge, PotionStrength
+from python_dungeons import utils
+from python_dungeons.items.chest import Chest
+from python_dungeons.items.ladder import Ladder
+from python_dungeons.items.misc_items import Shield, PotionHPSmall, PotionHPLarge, PotionStrength
 
-from src.utils import ROOM_DIMENSIONS, TILE_SIZE, SCREEN_SIZE
+from python_dungeons.utils import ROOM_DIMENSIONS, TILE_SIZE, SCREEN_SIZE
 
 
 class ItemManager:
