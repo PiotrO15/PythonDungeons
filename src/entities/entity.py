@@ -5,6 +5,8 @@ from src.utils import get_mask_rect
 
 class Entity:
     max_hp = 1000
+    def_speed = 100
+    speed = 0
     def __init__(self, game, name):
         self.hp = self.max_hp
         self.game = game
@@ -19,7 +21,6 @@ class Entity:
         self.dead = False
         #self.direction = 'right'
         self.can_move = True
-        self.time = 0
         self.can_get_hurt = True
 
     def __repr__(self):

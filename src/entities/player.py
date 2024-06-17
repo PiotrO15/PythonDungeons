@@ -23,8 +23,8 @@ class Player(Entity):
     def input(self):
         pressed = pygame.key.get_pressed()
 
-        if pressed[pygame.K_e] and pygame.time.get_ticks() - self.time > 300:
-            self.time = pygame.time.get_ticks()
+        if pressed[pygame.K_e]:
+            ...
             # interact with objects
 
         speed_adj = self.speed * self.game.dt
@@ -36,7 +36,7 @@ class Player(Entity):
         if velocity.length() != 0:
             velocity.normalize_ip()
             velocity.scale_to_length(speed_adj)
-        # print(vel)
+
         self.set_velocity(velocity)
 
 
@@ -98,7 +98,7 @@ class Player(Entity):
                             self.rect.y = top_left_corner[1] + door_y * utils.TILE_SIZE
                 break
 
-    def calculate_collision(self, enemy):
+    def calculate_damage(self, enemy):
         if not self.shield and not self.dead:
             self.hp = max(0, self.hp - enemy.damage)
             #TODO hurt sound / animation?

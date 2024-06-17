@@ -25,6 +25,7 @@ def draw_health_bar(surface, pos, size, hp_percentage):
 
 
 class Enemy(Entity):
+
     def __init__(self, game, max_hp, room, name):
         Entity.__init__(self, game, name)
         self.max_hp = max_hp
@@ -58,7 +59,7 @@ class Enemy(Entity):
 
     def attack_player(self, player):
         if self.hitbox.colliderect(player.hitbox) and self.can_attack():
-            player.calculate_collision(self)
+            player.calculate_damage(self)
 
     def generate_drops(self):
         pass
@@ -72,9 +73,9 @@ class Enemy(Entity):
         # self.generate_drops()
 
     def change_speed(self):
-        if time_passed(self.move_time, 100):
+        if pygame.time.get_ticks() - self.move_time > 100:
             self.move_time = pygame.time.get_ticks()
-            self.speed = random.randint(150, 250)
+            self.speed = self.def_speed + random.randint(-50, 100)
             return True
 
     def move(self):
@@ -156,7 +157,7 @@ class Enemy(Entity):
 class EnemyT1(Enemy):
     name = 'e1'
     damage = 13
-    speed = 300
+    def_speed = 150
 
     def __init__(self, game, max_hp, room):
         Enemy.__init__(self, game, max_hp, room, self.name)
