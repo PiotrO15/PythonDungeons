@@ -1,3 +1,5 @@
+import math
+
 import pygame
 import random
 from .entity import Entity
@@ -26,8 +28,8 @@ def draw_health_bar(surface, pos, size, hp_percentage):
 
 class Enemy(Entity):
 
-    def __init__(self, game, max_hp, room, name):
-        Entity.__init__(self, game, name)
+    def __init__(self, game, max_hp, room, name, frames=1):
+        Entity.__init__(self, game, name, frames)
         self.max_hp = max_hp
         self.hp = self.max_hp
         self.room = room
@@ -138,19 +140,19 @@ class Enemy(Entity):
 
             self.destination_position = pick
 
-    def draw_health(self, surf):
+    def draw_health(self):
         if self.hp < self.max_hp:
             health_rect = pygame.Rect(0, 0, 30, 8)
             health_rect.midbottom = self.rect.centerx, self.rect.top
             health_rect.midbottom = self.rect.centerx, self.rect.top
 
-            draw_health_bar(surf, health_rect.topleft, health_rect.size, self.hp / self.max_hp)
+            draw_health_bar(self.game.screen, health_rect.topleft, health_rect.size, self.hp / self.max_hp)
 
     def draw(self):
         if self.dead:
             return
-        self.game.screen.blit(self.image, self.rect)
-        self.draw_health(self.game.screen)
+        super().draw()
+        self.draw_health()
 
 
 class EnemyT1(Enemy):
@@ -159,4 +161,4 @@ class EnemyT1(Enemy):
     def_speed = 150
 
     def __init__(self, game, max_hp, room):
-        Enemy.__init__(self, game, max_hp, room, self.name)
+        Enemy.__init__(self, game, max_hp, room, self.name, 4)

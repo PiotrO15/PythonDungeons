@@ -58,7 +58,7 @@ class Player(Entity):
         self.update_hitbox()
 
     def center(self):
-        self.rect = self.image.get_rect(center=(self.game.display.get_width() / 2, self.game.display.get_height() / 2))
+        self.rect = self.image[0].get_rect(center=(self.game.display.get_width() / 2, self.game.display.get_height() / 2))
 
     def use_door(self, door):
         previous_room_position = self.game.current_room.position
@@ -148,11 +148,3 @@ class Player(Entity):
                 self.hurt = True
         elif self.shield:
             self.shield -= 1
-
-    def draw(self, surface):
-        if self.dead:
-            return
-        surface.blit(self.image, self.rect)
-
-
-

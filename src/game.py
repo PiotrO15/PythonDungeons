@@ -80,7 +80,7 @@ class Game:
         self.item_manager.draw_items()
 
         if self.player:
-            self.player.draw(self.screen)
+            self.player.draw()
 
         # self.mini_map.draw(self.screen)
         self.hud.draw()
