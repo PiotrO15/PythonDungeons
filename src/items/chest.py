@@ -10,14 +10,17 @@ class Chest(Item):
     def __init__(self, game, position=None):
         Item.__init__(self, game, 'chest', (TILE_SIZE, TILE_SIZE), position=position)
         self.open = False
+        self.solid = True
 
     def interact(self):
         if not self.open:
-            self.open = True
-            self.interaction = False
+            self.open_chest()
 
-            self.game.player.gold += random.randint(10, 5 * self.game.level)
+    def open_chest(self):
+        self.open = True
+        self.interaction = False
 
-    def update(self):
-        if self.open:
-            self.image = pygame.image.load('./assets/objects/chest_empty.png').convert_alpha()
+        self.game.player.gold += random.randint(2 * self.game.level, 5 * self.game.level)
+
+        self.image = pygame.transform.scale(pygame.image.load('../assets/objects/chest_empty.png').convert_alpha(),
+                                            self.size)

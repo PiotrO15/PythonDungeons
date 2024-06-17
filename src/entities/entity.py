@@ -78,7 +78,6 @@ class Entity:
             #     print(':(')
             collide_points = (new_pos_rect.midbottom, new_pos_rect.bottomleft, new_pos_rect.bottomright)
             if any(item.hitbox.collidepoint(point) for point in collide_points):
-                print(':)')
                 self.velocity = [0, 0]
 
         if (new_pos_rect.left < top_left_corner[0] + utils.TILE_SIZE

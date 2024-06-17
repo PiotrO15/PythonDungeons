@@ -18,6 +18,7 @@ class Item:
             self.rect.x, self.rect.y = position
         self.update_hitbox()
         self.interaction = False
+        self.solid = False
 
     def __repr__(self):
         return self.name
@@ -34,13 +35,17 @@ class Item:
         self.hitbox.midbottom = self.rect.midbottom
 
     def detect_collision(self):
-        if self.game.player.hitbox.colliderect(self.rect) and self.game.player.interaction:
+        if self.game.player.hitbox.colliderect(self.rect):
             self.interaction = True
         else:
             self.interaction = False
 
     def update(self):
-        pass
+        if self.solid:
+            self.detect_collision()
+
+        if self.interaction:
+            self.interact()
 
     def interact(self):
         pass
