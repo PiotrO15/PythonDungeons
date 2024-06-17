@@ -3,7 +3,7 @@ import pygame
 from src.map import display_map, generator
 from .items.item_manager import ItemManager
 from src.entities.enemy_manager import EnemyManager
-from src.entities.enemy import EnemyT1 # for debug
+from src.entities.enemy import ReaperSkeleton # for debug
 from src.entities.player import Player
 from src.ui.menu import MainMenu
 # from .mini_map import MiniMap
@@ -16,10 +16,12 @@ import time
 pygame.init()
 pygame.mixer.init()
 
+
 class Game:
     dungeon_size = 5
     room_count = 10
     level = 0
+
     def __init__(self):
         self.display = pygame.display.set_mode(utils.SCREEN_SIZE)
         self.screen = pygame.Surface(utils.SCREEN_SIZE).convert()
@@ -55,7 +57,8 @@ class Game:
         start_x = int(self.dungeon_size / 2)
         start_y = self.dungeon_size - 1
         self.current_room = self.dungeon[start_x, start_y]
-        while self.current_room.master: self.current_room = self.dungeon[self.current_room.master]
+        while self.current_room.master:
+            self.current_room = self.dungeon[self.current_room.master]
 
         self.current_room.enemy_list.clear()
 
@@ -76,7 +79,7 @@ class Game:
     def draw_groups(self):
         display_map.draw_room(self.current_room, self.screen)
 
-        self.enemy_manager.draw_enemies(self.screen)
+        self.enemy_manager.draw_enemies()
         self.item_manager.draw_items()
 
         if self.player:
@@ -104,7 +107,7 @@ class Game:
         if pygame.mouse.get_pressed()[2]:
             x, y = pygame.mouse.get_pos()
 
-            self.current_room.enemy_list.append(EnemyT1(self, 150, self.current_room))
+            self.current_room.enemy_list.append(ReaperSkeleton(self, 150, self.current_room))
             self.current_room.enemy_list[-1].rect.topleft = (x, y)
 
         # Hurt enemies in the room
@@ -131,7 +134,7 @@ class Game:
                 self.update_groups()
                 self.draw_groups()
 
-                self.display.blit(self.screen, (0,0))
+                self.display.blit(self.screen, (0, 0))
             else:
                 self.menu.show()
             pygame.display.flip()

@@ -1,9 +1,9 @@
-import math
+import random
 
 import pygame
-import random
-from .entity import Entity
+
 from src.utils import time_passed
+from .entity import Entity
 from .. import utils
 
 
@@ -155,9 +155,18 @@ class Enemy(Entity):
         self.draw_health()
 
 
-class EnemyT1(Enemy):
-    name = 'e1'
+class ReaperSkeleton(Enemy):
+    name = 'reaper_skeleton'
     damage = 13
+    def_speed = 150
+
+    def __init__(self, game, max_hp, room):
+        Enemy.__init__(self, game, max_hp, room, self.name, 4)
+
+
+class FighterSkeleton(Enemy):
+    name = 'fighter_skeleton'
+    damage = 10
     def_speed = 150
 
     def __init__(self, game, max_hp, room):
