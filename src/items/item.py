@@ -35,13 +35,16 @@ class Item:
         self.hitbox.midbottom = self.rect.midbottom
 
     def detect_interaction(self):
-        if self.game.player.hitbox.colliderect(self.rect):
+        pressed = pygame.key.get_pressed()
+        if self.game.player.hitbox.colliderect(self.rect) and pressed[pygame.K_e]:
             self.interaction = True
         else:
             self.interaction = False
 
     def update(self):
         self.detect_interaction()
+
+        # self.detect_interaction()
 
         if self.interaction:
             self.interact()

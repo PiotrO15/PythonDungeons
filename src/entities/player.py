@@ -23,10 +23,6 @@ class Player(Entity):
     def input(self):
         pressed = pygame.key.get_pressed()
 
-        if pressed[pygame.K_e]:
-            ...
-            # interact with objects
-
         speed_adj = self.speed * self.game.dt
 
         # Define velocity for each direction

@@ -75,9 +75,8 @@ class Entity:
         for item in room.item_list:
             # if item.rect.colliderect(new_pos_rect):
             #     self.velocity = [0, 0]
-            #     print(':(')
             if item.solid:
-                collide_points = (new_pos_rect.midbottom, new_pos_rect.bottomleft, new_pos_rect.bottomright)
+                collide_points = (new_pos_rect.midbottom, new_pos_rect.bottomleft, new_pos_rect.bottomright, new_pos_rect.midleft, new_pos_rect.midright, new_pos_rect.center)
                 if any(item.hitbox.collidepoint(point) for point in collide_points):
                     self.velocity = [0, 0]
 
