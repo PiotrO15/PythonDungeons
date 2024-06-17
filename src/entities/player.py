@@ -12,10 +12,10 @@ class Player(Entity):
     speed = 300
     max_hp = 100
     hp = max_hp
+    base_attack = 40
     gold = 0
     shield = 0
     strength = 1
-    items = []
 
     def __init__(self, game):
         Entity.__init__(self, game, self.name)
@@ -138,7 +138,7 @@ class Player(Entity):
         # Handle collision with enemies
         for enemy in self.game.current_room.enemy_list:
             if attack_rect.colliderect(enemy.hitbox):
-                enemy.hp -= self.strength * 40
+                enemy.hp -= self.strength * self.base_attack
 
     def calculate_damage(self, enemy):
         if not self.shield and not self.dead:

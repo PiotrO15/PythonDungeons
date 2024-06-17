@@ -3,7 +3,7 @@ import random
 from src import utils
 from src.items.chest import Chest
 from src.items.ladder import Ladder
-from src.items.misc_items import Shield, PotionHPSmall, PotionHPLarge
+from src.items.misc_items import Shield, PotionHPSmall, PotionHPLarge, PotionStrength
 
 from src.utils import ROOM_DIMENSIONS, TILE_SIZE, SCREEN_SIZE
 
@@ -30,8 +30,6 @@ class ItemManager:
 
                 if room.end:
                     # Spawn a ladder in the center
-                    # x = top_left_corner[0] + room.size[0] * ROOM_DIMENSIONS[0] * TILE_SIZE // 2
-                    # y = top_left_corner[1] + room.size[1] * ROOM_DIMENSIONS[1] * TILE_SIZE // 2
                     ladder = Ladder(self.game, utils.SCREEN_CENTER)
                     room.item_list.append(ladder)
 
@@ -53,7 +51,9 @@ class ItemManager:
 
                     if i > 70:
                         room.item_list.append(Shield(self.game, (x, y)))
-                    elif i > 10:
+                    elif i > 25:
                         room.item_list.append(PotionHPSmall(self.game, (x, y)))
-                    else:
+                    elif i > 5:
                         room.item_list.append(PotionHPLarge(self.game, (x, y)))
+                    else:
+                        room.item_list.append(PotionStrength(self.game, (x, y)))
