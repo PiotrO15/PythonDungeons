@@ -4,12 +4,12 @@ from src import utils
 
 
 class Button:
-
+    color = (255, 255, 255)
     def __init__(self, menu, x, y: int, text: str, fontsize: int):
         self.menu = menu
         self.text = text
         font = pygame.font.Font(utils.font, fontsize)
-        self.text_surface = font.render(self.text, True, (255, 255, 255))
+        self.text_surface = font.render(self.text, True, self.color)
         self.text_rect = self.text_surface.get_rect(midtop=(x, y))
 
     def detect_action(self, pos):
@@ -58,6 +58,9 @@ class Logo:
     def draw(self, surface):
         surface.blit(self.logo, self.logo_rect)
 
+class LeaderBoard:
+    def __init__(self, game):
+        self.surf = pygame.Surface((1000, 500))
 
 class MainMenu:
     def __init__(self, game):
@@ -76,12 +79,7 @@ class MainMenu:
         self.exit_button.update()
 
     def draw(self):
-        # Darken background
-        s = pygame.Surface(utils.SCREEN_SIZE)
-        s.set_alpha(128)
-        s.fill((0, 0, 0))
-
-        self.game.screen.blit(s, (0, 0))
+        self.game.screen.fill((20, 5, 15))
 
         # Draw buttons
         self.play_button.draw(self.game.screen)
