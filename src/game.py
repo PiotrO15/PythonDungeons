@@ -108,7 +108,7 @@ class Game:
             self.current_room.enemy_list[-1].rect.topleft = (x, y)
 
         # Hurt enemies in the room
-        if pygame.mouse.get_pressed()[0]:
+        if pygame.mouse.get_pressed()[1]:
             for enemy in self.current_room.enemy_list:
                 enemy.hp -= 4
 

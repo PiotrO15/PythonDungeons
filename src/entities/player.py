@@ -38,7 +38,8 @@ class Player(Entity):
 
         self.set_velocity(velocity)
 
-        if pressed[pygame.K_SPACE] and self.can_attack():
+        # if pressed[pygame.K_SPACE] and self.can_attack():
+        if pygame.mouse.get_pressed()[0] and self.can_attack():
             self.attack()
 
 
@@ -98,25 +99,32 @@ class Player(Entity):
                     self.rect.y = top_left_corner[1] + door_y * utils.TILE_SIZE
 
     def can_attack(self):
-        if time_passed(self.attack_cooldown, 0):
+        if time_passed(self.attack_cooldown, 300):
             self.attack_cooldown = pygame.time.get_ticks()
             return True
 
     def attack(self):
 
-        # Define attack area dimensions
-        attack_width, attack_height = 90, 50
+        # Attack area dimensions
+        attack_width, attack_height = 120, 60
 
-        # Calculate the angle of the attack rectangle based on the player's velocity
-        angle = math.degrees(math.atan2(self.velocity.y, self.velocity.x))
+        # Calculate the angle of the attack rectangle based on mouse position
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        dir_vector = pygame.math.Vector2(self.hitbox.x - mouse_x,
+                                         self.hitbox.y - mouse_y)
+        dir_vector.scale_to_length(1)
+        angle = math.degrees(math.atan2(dir_vector.y, dir_vector.x))
 
-        # Create the attack rectangle
+        # Calculate the angle of the attack rectangle based on the player's velocity (unused)
+        # angle = math.degrees(math.atan2(self.velocity.y, self.velocity.x))
+
+
         attack_rect = pygame.Rect(0, 0, attack_width, attack_height)
 
         # Position the attack rectangle relative to the player's position
         attack_rect.center = self.hitbox.center
-        attack_rect.centerx += int(self.velocity.x * 7)
-        attack_rect.centery += int(self.velocity.y * 7)
+        attack_rect.centerx -= int(dir_vector.x * 40)
+        attack_rect.centery -= int(dir_vector.y * 40)
 
         # Rotate the attack rectangle
         attack_surface = pygame.Surface((attack_width, attack_height), pygame.SRCALPHA)
@@ -124,13 +132,13 @@ class Player(Entity):
         attack_surface = pygame.transform.rotate(attack_surface, -angle)
         attack_rect = attack_surface.get_rect(center=attack_rect.center)
 
-        # Draw the attack rectangle for visualization (you might want to remove this in the actual game)
-        self.game.display.blit(attack_surface, attack_rect.topleft)
+        # Draw attack rectangle for visualization
+        # self.game.display.blit(attack_surface, attack_rect.topleft)
 
-        # Handle collision detection with enemies here
+        # Handle collision with enemies
         for enemy in self.game.current_room.enemy_list:
             if attack_rect.colliderect(enemy.hitbox):
-                enemy.hp -= self.strength * 10
+                enemy.hp -= self.strength * 40
 
     def calculate_damage(self, enemy):
         if not self.shield and not self.dead:

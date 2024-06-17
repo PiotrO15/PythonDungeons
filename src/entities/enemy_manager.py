@@ -23,7 +23,7 @@ class EnemyManager:
 
                 num_of_enemies = random.randint(0, 1 + level * room.size[0] * room.size[1])
                 for _ in range(num_of_enemies):
-                    enemy = EnemyT1(self.game, random.randint(100, 150) / 10, room)
+                    enemy = EnemyT1(self.game, random.randint(100, 150), room)
                     self.upgrade_enemy(enemy)
                     room.enemy_list.append(enemy)
                     room.enemy_list[-1].spawn()
