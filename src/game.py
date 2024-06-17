@@ -1,4 +1,5 @@
 import pygame
+import pandas as pd
 
 from src.map import display_map, generator
 from .items.item_manager import ItemManager
@@ -101,6 +102,24 @@ class Game:
             if pressed[pygame.K_ESCAPE]:
                 self.menu.running = True
                 self.paused = True
+
+    def load_stats(self) -> pd.DataFrame:
+        try:
+            df = pd.read_csv(utils.stats_path)
+        except:
+            df = pd.DataFrame()
+        return df
+
+    def save(self, name: str):
+        df = self.load_stats()
+        stats = {
+            'name': name,
+            'gold': self.player.gold,
+            'level': self.level
+        }
+        df = df._append(stats, ignore_index=True)
+        print(df)
+        df.to_csv(utils.stats_path, header=True, index=False, encoding='utf-8')
 
     def debug(self):
         # Spawn enemies under cursor

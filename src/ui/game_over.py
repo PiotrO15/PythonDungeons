@@ -62,7 +62,7 @@ class SaveButton(Button):
             name = self.menu.input_box.text
             # print(name)
             self.active = False
-            ...  # TODO save
+            self.menu.game.save(name)
 
 
 class ExitButton(Button):

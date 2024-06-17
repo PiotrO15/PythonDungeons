@@ -12,6 +12,7 @@ BACKGROUND_COLOR = (37, 19, 26)
 WHITE = (255, 255, 255)
 basic_entity_size = (30, 30)
 font = '../assets/Minecraft.ttf'
+stats_path = '../stats.csv'
 
 def resource_path(relative_path):
     base_path = os.path.abspath("..")
