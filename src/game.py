@@ -115,10 +115,12 @@ class Game:
         stats = {
             'name': name,
             'gold': self.player.gold,
-            'level': self.level
+            'level': self.level,
+            'points': self.player.gold + self.level * 100,
+            'gametime': pygame.time.get_ticks()
         }
         df = df._append(stats, ignore_index=True)
-        print(df)
+        #print(df)
         df.to_csv(utils.stats_path, header=True, index=False, encoding='utf-8')
 
     def debug(self):

@@ -10,7 +10,7 @@ class TextInputBox(pygame.sprite.Sprite):
         self.game = game
         self.text_color = (255, 255, 255)
         self.text_color_empty = (130, 120, 130)
-        self.backcolor = (40, 30, 50)
+        self.backcolor = (50, 25, 35)
         self.pos = (x, y)
         self.width = width
         self.font = pygame.font.Font(utils.font, fontsize)
@@ -57,7 +57,8 @@ class SaveButton(Button):
         super().__init__(menu, x, y, 'SAVE', 40)
         self.active = True
 
-    def detect_action(self, pos):
+    def detect_action(self):
+        pos = pygame.mouse.get_pos()
         if self.text_rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] == 1 and self.active:
             name = self.menu.input_box.text
             # print(name)
@@ -69,7 +70,8 @@ class ExitButton(Button):
     def __init__(self, menu, x, y):
         super().__init__(menu, x, y, 'EXIT', 40)
 
-    def detect_action(self, pos):
+    def detect_action(self):
+        pos = pygame.mouse.get_pos()
         if self.text_rect.collidepoint(pos) and pygame.mouse.get_pressed()[0] == 1:
             self.menu.game.running = False
             self.menu.running = False
@@ -92,7 +94,6 @@ class GameOver:
 
     def update(self):
         if self.game.player.dead:
-            self.input()
             self.input_box.update()
 
             self.save_button.update()

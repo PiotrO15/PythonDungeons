@@ -42,7 +42,6 @@ class Player(Entity):
         if pygame.mouse.get_pressed()[0] and self.can_attack():
             self.attack()
 
-
     def update(self) -> None:
         if self.dead:
             self.game.paused = True
@@ -58,7 +57,8 @@ class Player(Entity):
         self.update_hitbox()
 
     def center(self):
-        self.rect = self.image[0].get_rect(center=(self.game.display.get_width() / 2, self.game.display.get_height() / 2))
+        self.rect = self.image[0].get_rect(
+            center=(self.game.display.get_width() / 2, self.game.display.get_height() / 2))
 
     def use_door(self, door):
         previous_room_position = self.game.current_room.position
@@ -117,7 +117,6 @@ class Player(Entity):
 
         # Calculate the angle of the attack rectangle based on the player's velocity (unused)
         # angle = math.degrees(math.atan2(self.velocity.y, self.velocity.x))
-
 
         attack_rect = pygame.Rect(0, 0, attack_width, attack_height)
 
