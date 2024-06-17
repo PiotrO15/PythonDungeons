@@ -1,7 +1,10 @@
 import random
 
+from src import utils
 from src.items.chest import Chest
 from src.items.ladder import Ladder
+from src.items.misc_items import Shield, PotionHPSmall, PotionHPLarge
+
 from src.utils import ROOM_DIMENSIONS, TILE_SIZE, SCREEN_SIZE
 
 
@@ -27,9 +30,9 @@ class ItemManager:
 
                 if room.end:
                     # Spawn a ladder in the center
-                    x = top_left_corner[0] + room.size[0] * ROOM_DIMENSIONS[0] * TILE_SIZE // 2
-                    y = top_left_corner[1] + room.size[1] * ROOM_DIMENSIONS[1] * TILE_SIZE // 2
-                    ladder = Ladder(self.game, (x, y))
+                    # x = top_left_corner[0] + room.size[0] * ROOM_DIMENSIONS[0] * TILE_SIZE // 2
+                    # y = top_left_corner[1] + room.size[1] * ROOM_DIMENSIONS[1] * TILE_SIZE // 2
+                    ladder = Ladder(self.game, utils.SCREEN_CENTER)
                     room.item_list.append(ladder)
 
                 #spawn chests
@@ -40,3 +43,17 @@ class ItemManager:
 
                     chest = Chest(self.game, (x, y))
                     room.item_list.append(chest)
+
+                #spawn extra item
+                if random.randint(1, 2) == 1:
+                    x = top_left_corner[0] + random.randint(2 * TILE_SIZE, room_size_px[0] - 2 * TILE_SIZE)
+                    y = top_left_corner[1] + random.randint(2 * TILE_SIZE, room_size_px[1] - 2 * TILE_SIZE)
+
+                    i = random.randint(1, 100)
+
+                    if i > 70:
+                        room.item_list.append(Shield(self.game, (x, y)))
+                    elif i > 10:
+                        room.item_list.append(PotionHPSmall(self.game, (x, y)))
+                    else:
+                        room.item_list.append(PotionHPLarge(self.game, (x, y)))
