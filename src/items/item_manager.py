@@ -1,6 +1,7 @@
 import random
 
 from src.items.chest import Chest
+from src.items.ladder import Ladder
 from src.utils import ROOM_DIMENSIONS, TILE_SIZE, SCREEN_SIZE
 
 
@@ -25,7 +26,11 @@ class ItemManager:
                 top_left_corner = [(a - b) / 2 for a, b in zip(SCREEN_SIZE, room_size_px)]
 
                 if room.end:
-                    ...  # TODO spawn ladder
+                    # Spawn a ladder in the center
+                    x = top_left_corner[0] + room.size[0] * ROOM_DIMENSIONS[0] * TILE_SIZE // 2
+                    y = top_left_corner[1] + room.size[1] * ROOM_DIMENSIONS[1] * TILE_SIZE // 2
+                    ladder = Ladder(self.game, (x, y))
+                    room.item_list.append(ladder)
 
                 #spawn chests
                 num_of_chests = random.randint(0, 1 + room.size[0] * room.size[1])

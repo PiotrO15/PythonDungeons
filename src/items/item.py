@@ -34,15 +34,14 @@ class Item:
         self.hitbox = get_mask_rect(self.image, *self.rect.topleft)
         self.hitbox.midbottom = self.rect.midbottom
 
-    def detect_collision(self):
+    def detect_interaction(self):
         if self.game.player.hitbox.colliderect(self.rect):
             self.interaction = True
         else:
             self.interaction = False
 
     def update(self):
-        if self.solid:
-            self.detect_collision()
+        self.detect_interaction()
 
         if self.interaction:
             self.interact()
