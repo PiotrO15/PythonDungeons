@@ -76,11 +76,11 @@ class Game:
     def draw_groups(self):
         display_map.draw_room(self.current_room, self.screen)
 
-        if self.player:
-            self.player.draw(self.screen)
-
         self.enemy_manager.draw_enemies(self.screen)
         self.item_manager.draw_items()
+
+        if self.player:
+            self.player.draw(self.screen)
 
         # self.mini_map.draw(self.screen)
         self.hud.draw()

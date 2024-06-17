@@ -14,9 +14,9 @@ class Item:
         self.path = f'..\\assets\\objects\\{self.name}.png'
         self.load_image()
         self.rect = self.image.get_rect()
-        self.update_hitbox()
         if position:
             self.rect.x, self.rect.y = position
+        self.update_hitbox()
         self.interaction = False
 
     def __repr__(self):
