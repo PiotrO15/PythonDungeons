@@ -44,8 +44,6 @@ class Item:
     def update(self):
         self.detect_interaction()
 
-        # self.detect_interaction()
-
         if self.interaction:
             self.interact()
 
